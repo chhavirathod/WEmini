@@ -1,6 +1,11 @@
-import { createCampaign, dashboard, logout, payment, profile, withdraw } from '../assets';
+import  createCampaign from '../assets/create-campaign.svg';
+import dashboard from '../assets/dashboard.svg';
+import logout from '../assets/logout.svg';
+import payment from '../assets/payment.svg';
+import profile from '../assets/profile.svg';
+import withdraw from '../assets/withdraw.svg';
 
-export const navlinks = [
+const navlinks = [
   {
     name: 'dashboard',
     imgUrl: dashboard,
@@ -35,3 +40,5 @@ export const navlinks = [
     disabled: true,
   },
 ];
+
+export default navlinks;
