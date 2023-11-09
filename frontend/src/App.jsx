@@ -16,11 +16,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-<<<<<<< Updated upstream
-      <h1>Vite + React + Nigga</h1>
-=======
-      <h1>Vite + React + Aaron + Harshvardhan</h1>
->>>>>>> Stashed changes
+      <h1>Vite + React + Aaron + Harshvardhan + Garv</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
