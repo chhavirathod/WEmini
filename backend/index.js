@@ -1,9 +1,17 @@
 const express = require('express');
-const dotenv = require('dotenv')
 const app = express();
+const dotenv = require('dotenv')
+
+dotenv.config({ path: './config.env'})
+const PORT = process.env.PORT
 
 require('./db/connnection')
+// const User = require('./model/userSchema')
 
-app.get('/' , (req,res) => res.send("Hello"));
+app.use(express.json())
 
-app.listen( 5000 , () => console.log('port 5000 running') );
+app.use(require('./router/auth'))
+
+// app.get('/' , (req,res) => res.send("Hello"));
+
+app.listen( PORT , () => console.log(`port ${PORT} running`) );
