@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import navlinks from '../constants/index'
-
 import  Logo  from '../assets/logo.svg';
 import  Sun  from '../assets/sun.svg';
 
