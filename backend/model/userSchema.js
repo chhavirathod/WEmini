@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    balance:{
+        type: Number,
+        default: 10000000
+    }
 })
 
 userSchema.pre('save', async function(next) {
