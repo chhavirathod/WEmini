@@ -13,6 +13,7 @@ const Navbar = () => {
           <img src={search} alt="search" className="w-[15px] h-[15px] object-contain"/>
         </div>
       </div>
+      
     </div>
   );
 };
