@@ -1,24 +1,32 @@
 import React, { useState, useEffect } from 'react'
-
+import axios from 'axios';
 import { DisplayCampaigns } from '../components';
-import { useStateContext } from '../context'
+// import { useStateContext } from '../context'
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
 
-  const { address, contract, getCampaigns } = useStateContext();
+  // const { address, contract, getCampaigns } = useStateContext();
 
-  const fetchCampaigns = async () => {
+  const fetchCampaigns = () => {
     setIsLoading(true);
-    const data = await getCampaigns();
-    setCampaigns(data);
-    setIsLoading(false);
+    // const data = await getCampaigns();
+    axios.get('http://localhost:5000/allCampaigns')
+      .then((res) => {
+        setCampaigns(res.data);
+        setIsLoading(false);
+      })
+      .catch((e)=>{
+        console.log(e);
+        setIsLoading(false);
+      })
+    
   }
 
   useEffect(() => {
-    if(contract) fetchCampaigns();
-  }, [address, contract]);
+    fetchCampaigns()
+  }, []);
 
   return (
     <DisplayCampaigns 

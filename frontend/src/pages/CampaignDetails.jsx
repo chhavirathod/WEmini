@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ethers } from 'ethers';
+// import { ethers } from 'ethers';
 
-import { useStateContext } from '../context';
+// import { useStateContext } from '../context';
 import { CountBox, CustomButton, Loader } from '../components';
 import { calculateBarPercentage, daysLeft } from '../utils';
 import { thirdweb } from '../assets';
+import  axios  from 'axios';
 
 const CampaignDetails = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { donate, getDonations, contract, address } = useStateContext();
+  // const { donate, getDonations, contract, address } = useStateContext();
 
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState('');
@@ -18,20 +19,29 @@ const CampaignDetails = () => {
 
   const remainingDays = daysLeft(state.deadline);
 
-  const fetchDonators = async () => {
-    const data = await getDonations(state.pId);
-
-    setDonators(data);
+  const fetchDonators = () => {
+    axios.get(`http://localhost:5000/getCampaign/${state._id}`)
+    .then((res)=>{
+      setDonators(res.data.donators)
+    })
+    .catch((e)=>{console.log(e)})
   }
 
   useEffect(() => {
-    if(contract) fetchDonators();
-  }, [contract, address])
+    fetchDonators();
+  }, [])
 
-  const handleDonate = async () => {
+  // add toast to emphasize the donation message
+  // post donator after user backend is connected
+  // add login sign up page and connect it
+  const handleDonate = () => {
     setIsLoading(true);
 
-    await donate(state.pId, amount); 
+    axios.post('http://localhost:5000/donate' , {campaign: state, donation: amount})
+      .then(()=>{
+        console.log('Donated: '+ amount + ` to ${state.title}` )
+      })
+      .catch((e)=>{console.log(e)})
 
     navigate('/')
     setIsLoading(false);
@@ -60,15 +70,15 @@ const CampaignDetails = () => {
       <div className="mt-[60px] flex lg:flex-row flex-col gap-5">
         <div className="flex-[2] flex flex-col gap-[40px]">
           <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Creator</h4>
+            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">{state.title}</h4>
 
             <div className="mt-[20px] flex flex-row items-center flex-wrap gap-[14px]">
               <div className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32] cursor-pointer">
                 <img src={thirdweb} alt="user" className="w-[60%] h-[60%] object-contain"/>
               </div>
               <div>
-                <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">{state.owner}</h4>
-                <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">10 Campaigns</p>
+                <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">{state.name}</h4>
+                <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">10 donations</p>
               </div>
             </div>
           </div>
@@ -98,11 +108,11 @@ const CampaignDetails = () => {
         </div>
 
         <div className="flex-1">
-          <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Fund</h4>   
+          <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Funding</h4>   
 
           <div className="mt-[20px] flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
             <p className="font-epilogue fount-medium text-[20px] leading-[30px] text-center text-[#808191]">
-              Fund the campaign
+              Fund this campaign
             </p>
             <div className="mt-[30px]">
               <input 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { ethers } from 'ethers';
+import axios from 'axios'
+// import { ethers } from 'ethers';
 
 // import { useStateContext } from '../context';
 import { money } from '../assets';
@@ -30,6 +31,13 @@ const CreateCampaign = () => {
     checkIfImage(form.image, async (exists) => {
       if(exists) {
         setIsLoading(true)
+        console.log(form)
+        
+        axios.post('http://localhost:5000/addCampaign' , form )
+          .then((res)=>{
+            console.log("Status: " + res.status + "\n" + res.data)
+          })
+          .catch((e)=>alert(e))
         // await createCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18)})
         setIsLoading(false);
         navigate('/');

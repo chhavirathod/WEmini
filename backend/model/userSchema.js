@@ -21,7 +21,15 @@ const userSchema = new mongoose.Schema({
     balance:{
         type: Number,
         default: 10000000
-    }
+    },
+    campaigns:[
+        {
+            campaign_id:{
+                type: mongoose.Schema.ObjectId,
+                ref: "CAMPAIGN"
+            }
+        }
+    ]
 })
 
 userSchema.pre('save', async function(next) {

@@ -18,6 +18,22 @@ router.get('/viewAllUsers', (req,res) =>{
         .catch((err) => console.log(err))
 })
 
+router.get('/allCampaigns' , (req,res) => {
+    Campaign.find()
+        .then((campaigns) => {
+            res.send(campaigns)
+        })
+        .catch((e)=>{console.log(e)})
+})
+
+router.get('/getCampaign/:id' , (req,res) => { 
+    Campaign.findOne({_id:req.params.id})
+        .then((campaign) => {
+            res.send(campaign)
+        })
+        .catch((e)=>{console.log(e)})
+})
+
 router.post('/register' , (req , res) => {
     const { name , email , pwd , cpwd } = req.body
     
@@ -118,6 +134,13 @@ router.post('/addCampaign' , (req,res) => {
             })
         .catch((e) => {console.log(e)})
 
+})
+
+router.post('/donate' , (req,res) => {
+    const { campaign , donation } = req.body
+    Campaign.updateOne({_id: campaign._id} , {amountCollected: campaign.amountCollected + Number(donation)})
+        .then(()=>{res.status(200).json({message :`Donation of ${donation} was succesfull.`})})
+        .catch((e)=>{console.log(e)})
 })
 
 module.exports = router
