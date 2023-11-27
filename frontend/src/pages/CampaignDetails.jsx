@@ -32,7 +32,7 @@ const CampaignDetails = () => {
   }, [])
 
   // add toast to emphasize the donation message
-  // post donator after user backend is connected
+  // post donator and deduct balance after user backend is connected
   // add login sign up page and connect it
   const handleDonate = () => {
     setIsLoading(true);

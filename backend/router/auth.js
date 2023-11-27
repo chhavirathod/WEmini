@@ -1,5 +1,6 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const router = express.Router()
 
 require("../db/connnection")
@@ -29,7 +30,7 @@ router.get('/allCampaigns' , (req,res) => {
 router.get('/getCampaign/:id' , (req,res) => { 
     Campaign.findOne({_id:req.params.id})
         .then((campaign) => {
-            res.send(campaign)
+            return res.status(200).send(campaign)
         })
         .catch((e)=>{console.log(e)})
 })
@@ -75,7 +76,7 @@ router.post('/register' , (req , res) => {
 router.post('/login' , (req , res) => {
     const { email , pwd } = req.body 
     // console.log(req.body)
-    
+
     //validation
     function validateEmail(email) {
         const regex = /^[\w.-]+@[a-zA-Z_-]+?\.[a-zA-Z]{2,}$/;
@@ -90,9 +91,9 @@ router.post('/login' , (req , res) => {
 
     //Checking existing User
     User.findOne({email : email})
-        .then((userExist) => {      //userExist contains details of the found user or NULL value
+        .then(async (userExist) => {      //userExist contains details of the found user or NULL value
             console.log(userExist)
-
+            let token;
             if(userExist){
                 bcrypt.compare( pwd , userExist.pwd)
                     .then((isMatch) =>{
@@ -101,6 +102,9 @@ router.post('/login' , (req , res) => {
                         else
                             res.json({message: "Login Successfull"})
                     }).catch(e => console.log(e))
+
+                const token = await userExist.generateAuthToken();
+                console.log(token)
             }
             else
                 res.json({message: "Couldnt find the User"})

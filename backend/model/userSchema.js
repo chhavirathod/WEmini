@@ -1,5 +1,9 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
+
+dotenv.config({path: '../config.env'})
 
 const userSchema = new mongoose.Schema({
     name:{
@@ -29,7 +33,15 @@ const userSchema = new mongoose.Schema({
                 ref: "CAMPAIGN"
             }
         }
-    ]
+    ],
+    tokens:[
+        {
+            token:{
+                type: String,
+                required: true
+            }
+        }
+    ],
 })
 
 userSchema.pre('save', async function(next) {
@@ -40,6 +52,14 @@ userSchema.pre('save', async function(next) {
     }
     next()
 })
+
+//token generation
+userSchema.methods.generateAuthToken = async function() {
+    const newToken = await jwt.sign({_id : this._id}, process.env.SECRET_KEY)
+    this.tokens = this.tokens.concat({token : newToken})
+    this.save();
+    return newToken;
+}
 
 
 const User = mongoose.model('USER' , userSchema)
