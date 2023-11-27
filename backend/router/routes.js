@@ -3,12 +3,19 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const router = express.Router()
 
-require("../db/connnection")
-const User = require('../model/userSchema')
-const Campaign = require('../model/campaignSchema')
+
+require("../db/connnection");
+const User = require('../model/userSchema');
+const Campaign = require('../model/campaignSchema');
+const authenticate = require('../middleware/authenticate');
 
 router.get('/' , (req,res) => {
-    res.send("Backend Home Page")
+    res.send("Backend Home Page");
+    // res.setHeader("Access-Control-Allow-Origin", "*")
+    // res.setHeader("Access-Control-Allow-Credentials", "true");
+    // res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    // res.setHeader("Access-Control-Allow-Headers", "content-type");
+    // res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
 })
 
 router.get('/viewAllUsers', (req,res) =>{
@@ -17,6 +24,10 @@ router.get('/viewAllUsers', (req,res) =>{
             res.send(users)
         })
         .catch((err) => console.log(err))
+})
+
+router.get('/profile' , authenticate , (req,res) => {
+    res.send(req.rootUser);
 })
 
 router.get('/allCampaigns' , (req,res) => {
@@ -44,30 +55,26 @@ router.post('/register' , (req , res) => {
         return regex.test(email);
     }
 
-    if(!name || !email || !pwd || !cpwd){
-        return res.status(422).json({error: "Please Fill all the fields"})
-    }
-
     if(!validateEmail(email)){
-        return res.status(400).json({error: "Invalid Email"})
+        return res.status(401).json({message: "Invalid Email"})
     }
 
     //Checking existing User
     User.findOne({email: email})
         .then( (userExist) => {
             if(userExist){
-                return res.status(422).json({error: "Email already Exists"})
+                return res.status(401).json({message: "Email already Exists"})
             }
 
             else if(pwd != cpwd){
-                return res.status(400).json({error: "Confirm Password not equal"})
+                return res.status(401).json({message: "Confirm Password not equal"})
             }
 
             const user = new User({name , email, pwd, cpwd})
             
             user.save().then(() => {
                 res.status(201).json({message: "User registered Succesfully"})
-            }).catch((e) => res.status(500).json({error: "Failed to register"}))
+            }).catch((e) => res.status(500).json({message: "Failed to register"}))
             
         })
         .catch( e => { console.log(e) })
@@ -83,31 +90,37 @@ router.post('/login' , (req , res) => {
         return regex.test(email);
     }
     if(!email || !pwd){
-        return res.status(400).json({error : "Please fill all the fields!"})
+        return res.status(401).json({error : "Please fill all the fields!"})
     }
     if(!validateEmail(email)){
-        return res.status(400).json({error: "Invalid Email"})
+        return res.status(401).json({error: "Invalid Email"})
     }
 
     //Checking existing User
     User.findOne({email : email})
         .then(async (userExist) => {      //userExist contains details of the found user or NULL value
-            console.log(userExist)
-            let token;
             if(userExist){
                 bcrypt.compare( pwd , userExist.pwd)
                     .then((isMatch) =>{
                         if(!isMatch)
-                            res.json({message: "Wrong Password"})
+                            res.status(401).json({message: "Wrong Password"})
                         else
-                            res.json({message: "Login Successfull"})
+                            res.status(200).json({message: "Login Successfull"})
                     }).catch(e => console.log(e))
 
                 const token = await userExist.generateAuthToken();
                 console.log(token)
+                
+                //cookie
+                res.cookie("jwtoken" , token , { 
+                    expires: new Date(Date.now() + 3600000),
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: "none"
+                });
             }
             else
-                res.json({message: "Couldnt find the User"})
+                res.status(401).json({message: "Couldnt find the User"})
         })
         .catch((e) => {
             console.log(e)
@@ -146,5 +159,7 @@ router.post('/donate' , (req,res) => {
         .then(()=>{res.status(200).json({message :`Donation of ${donation} was succesfull.`})})
         .catch((e)=>{console.log(e)})
 })
+
+
 
 module.exports = router

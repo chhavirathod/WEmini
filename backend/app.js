@@ -2,16 +2,23 @@ const express = require('express');
 const app = express();
 const dotenv = require('dotenv')
 const cors = require('cors')
+const cookie_parser = require('cookie-parser')
 
+const corsOptions ={
+    origin:'http://127.0.0.1:5173', 
+    credentials:true,              //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
 dotenv.config({ path: './config.env'})
 const PORT = process.env.PORT
 
 require('./db/connnection')
 // const User = require('./model/userSchema')
-app.use(cors())
+app.use(cors(corsOptions))
+app.use(cookie_parser())
 app.use(express.json())
 
-app.use(require('./router/auth'))
+app.use(require('./router/routes'))
 
 // app.get('/' , (req,res) => res.send("Hello"));
 

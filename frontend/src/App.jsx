@@ -2,6 +2,8 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Sidebar, Navbar } from './components';
 import { Home, Profile, CreateCampaign, CampaignDetails } from './pages'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
@@ -21,6 +23,18 @@ const App = () => {
         </Routes>
         
       </div>
+      <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
     </div>
   )
 }

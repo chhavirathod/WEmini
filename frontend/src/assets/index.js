@@ -12,8 +12,14 @@ import menu from './menu.svg';
 import money from './money.svg';
 import loader from './loader.svg';
 import thirdweb from './thirdweb.png';
+import MailIcon from './MailIcon'
+import LockIcon from './LockIcon'
+import NameIcon from './NameIcon'
 
 export {
+  NameIcon,
+  LockIcon,
+  MailIcon,
   tagType,
   createCampaign,
   dashboard,

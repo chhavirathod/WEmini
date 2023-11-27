@@ -55,12 +55,11 @@ userSchema.pre('save', async function(next) {
 
 //token generation
 userSchema.methods.generateAuthToken = async function() {
-    const newToken = await jwt.sign({_id : this._id}, process.env.SECRET_KEY)
+    const newToken = jwt.sign({_id : this._id}, process.env.SECRET_KEY)
     this.tokens = this.tokens.concat({token : newToken})
     this.save();
     return newToken;
 }
-
 
 const User = mongoose.model('USER' , userSchema)
 
