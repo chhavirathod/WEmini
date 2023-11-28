@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
+import { toast } from 'react-toastify';
 // import { ethers } from 'ethers';
 
 // import { useStateContext } from '../context';
@@ -31,14 +32,13 @@ const CreateCampaign = () => {
     checkIfImage(form.image, async (exists) => {
       if(exists) {
         setIsLoading(true)
-        console.log(form)
         
-        axios.post('http://localhost:5000/addCampaign' , form )
+        axios.post('http://localhost:5000/addCampaign' , form , {withCredentials: true})
           .then((res)=>{
-            console.log("Status: " + res.status + "\n" + res.data)
+            toast.success(res.data.message)
           })
-          .catch((e)=>alert(e))
-        // await createCampaign({ ...form, target: ethers.utils.parseUnits(form.target, 18)})
+          .catch((e)=>toast.error(e.response.data.message))
+
         setIsLoading(false);
         navigate('/');
       } else {
@@ -116,6 +116,7 @@ const CreateCampaign = () => {
               btnType="submit"
               title="Submit new campaign"
               styles="bg-[#1dc071]"
+              handleClick={() => {navigate('')}}
             />
           </div>
       </form>

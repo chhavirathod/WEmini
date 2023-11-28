@@ -26,11 +26,31 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 10000000
     },
-    campaigns:[
+    donated_campaigns:[
         {
-            campaign_id:{
-                type: mongoose.Schema.ObjectId,
-                ref: "CAMPAIGN"
+            campaign:{
+                campaign_id:{
+                    type: mongoose.Schema.ObjectId,
+                    ref: "CAMPAIGN"
+                },
+                donation:{
+                    type: Number,
+                    default: 0
+                }
+            }
+        }
+    ],
+    yourCampaigns:[
+        {
+            campaign:{
+                campaign_id:{
+                    type: mongoose.Schema.ObjectId,
+                    ref: "CAMPAIGN"
+                },
+                title:{
+                    type: String,
+                    ref: "CAMPAIGN"
+                }
             }
         }
     ],

@@ -1,6 +1,7 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 const router = express.Router()
 
 
@@ -26,8 +27,18 @@ router.get('/viewAllUsers', (req,res) =>{
         .catch((err) => console.log(err))
 })
 
+router.get('/user/:id' , (req,res) => {
+    User.findOne({_id: req.params.id})
+        .then((user) =>{
+            if(user){
+                res.status(200).send(user);
+            }
+        })
+        .catch((e)=>{console.log(e)})
+})
+
 router.get('/profile' , authenticate , (req,res) => {
-    res.send(req.rootUser);
+    return res.send(req.rootUser);
 })
 
 router.get('/allCampaigns' , (req,res) => {
@@ -44,6 +55,29 @@ router.get('/getCampaign/:id' , (req,res) => {
             return res.status(200).send(campaign)
         })
         .catch((e)=>{console.log(e)})
+})
+
+router.get('/logout' , (req,res) => {
+    res.clearCookie("jwtoken", {path: "/" ,domain: 'localhost', httpOnly: true, secure: true, sameSite:"none" });
+    res.status(200).json({message:"Logged out Successfully!"})
+    console.log(res.cookie)
+})
+
+router.post('/getManyCampaigns' , (req,res) => {
+    const list = req.body
+    let c_list =[]
+    // console.log(list[0].campaign.campaign_id)
+    list.map((item) =>{
+        c_list.push(item.campaign.campaign_id)
+    })
+    // console.log(c_list)
+    Campaign.find({ _id: {$in: c_list}})
+        .then((campaigns)=>{
+            if(campaigns){
+                res.status(200).send(campaigns)
+            }
+        })
+        .catch((e)=>console.log(e))
 })
 
 router.post('/register' , (req , res) => {
@@ -127,7 +161,7 @@ router.post('/login' , (req , res) => {
         })
 })
 
-router.post('/addCampaign' , (req,res) => {
+router.post('/addCampaign' , authenticate , (req,res) => {
     const { name, title, description , target, deadline, image } = req.body
     
     if( !name || !title || !description || !target || !deadline || !image){
@@ -137,29 +171,59 @@ router.post('/addCampaign' , (req,res) => {
     Campaign.findOne({title: title})
         .then((existingCampaign) => {
             if(existingCampaign){
-                return res.status(422).json({error: "Campaign already Exists"})
+                return res.status(422).json({message: "Campaign already Exists"})
             }
 
-            console.log(req.body)
             const campaign = new Campaign({name, title, description , target, deadline, image})
             campaign.save()
                 .then(() => {
                     res.status(201).json({message: "Campaign added Succesfully"})
                 })
-                .catch((e) => res.status(500).json({error: "Failed to add campaign"}))
+                .catch((e) => res.status(500).json({message: "Failed to add campaign"}))
         
             })
         .catch((e) => {console.log(e)})
 
+    Campaign.findOne({name: name , title: title})
+            .then((campaign) => {
+                console.log(campaign)
+                if(campaign){
+                    User.updateOne({_id:req.UserID}, {$push: {yourCampaigns: {campaign:{campaign_id: campaign._id , title: campaign.title }}}})
+                        .then(() => console.log("Added Campaign to the User database"))
+                        .catch((e)=>console.log(e))
+                }
+                else    
+                console.log("didnt update User")
+            })
+            .catch((e)=>console.log(e))
+
 })
 
-router.post('/donate' , (req,res) => {
+router.post('/donate' , authenticate , (req,res) => {
     const { campaign , donation } = req.body
-    Campaign.updateOne({_id: campaign._id} , {amountCollected: campaign.amountCollected + Number(donation)})
-        .then(()=>{res.status(200).json({message :`Donation of ${donation} was succesfull.`})})
+    Campaign.updateOne(
+        {_id: campaign._id} , 
+        {  
+            amountCollected: campaign.amountCollected + Number(donation) , 
+            $push: {donators:{donator:{_id: req.UserID, name: req.rootUser.name , donation: Number(donation)}}}
+            
+        }
+        )
+        .then(()=>{})
         .catch((e)=>{console.log(e)})
+
+    User.updateOne(
+        {_id: req.UserID}, 
+        {
+            balance: req.rootUser.balance - Number(donation),
+            $push: {donated_campaigns:{campaign: {campaign_id: campaign._id , donation: Number(donation) }}},
+                
+        }
+        )
+        .then(()=>{res.status(201).json({message :`Successfully Donated $${donation} to ${campaign.title}`})})
+        .catch((e)=>{console.log(e)})
+
+        
 })
-
-
 
 module.exports = router

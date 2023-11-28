@@ -33,18 +33,19 @@ const campaignSchema = new mongoose.Schema({
     },
     donators:[
         {
-            donator_id:{
-                type: mongoose.Schema.ObjectId,
-                ref: "USER"
-            },
             donator: {
-                type: String,
-                ref: "USER"
-            },
-            donation:{
-                type: Number
+                _id:{
+                    type: mongoose.Schema.ObjectId,
+                    ref: "USER"
+                },
+                name:{
+                    type: String,
+                    ref: "USER"
+                },
+                donation:{
+                    type: Number
+                }
             }
-
         }
     ]
     

@@ -5,6 +5,7 @@ import { CountBox, CustomButton, Loader } from '../components';
 import { calculateBarPercentage, daysLeft } from '../utils';
 import { thirdweb } from '../assets';
 import  axios  from 'axios';
+import { toast } from 'react-toastify';
 
 const CampaignDetails = () => {
   const { state } = useLocation();
@@ -20,6 +21,7 @@ const CampaignDetails = () => {
     axios.get(`http://localhost:5000/getCampaign/${state._id}`)
     .then((res)=>{
       setDonators(res.data.donators)
+
     })
     .catch((e)=>{console.log(e)})
   }
@@ -28,17 +30,15 @@ const CampaignDetails = () => {
     fetchDonators();
   }, [])
 
-  // add toast to emphasize the donation message
-  // post donator and deduct balance after user backend is connected
-  // add login sign up page and connect it
   const handleDonate = () => {
     setIsLoading(true);
 
-    axios.post('http://localhost:5000/donate' , {campaign: state, donation: amount})
-      .then(()=>{
+    axios.post('http://localhost:5000/donate' , {campaign: state, donation: amount} , {withCredentials: true})
+      .then((res)=>{
         console.log('Donated: '+ amount + ` to ${state.title}` )
+        toast.success(res.data.message)
       })
-      .catch((e)=>{console.log(e)})
+      .catch((e)=>{toast.error("Error : " + e)})
 
     navigate('/')
     setIsLoading(false);
@@ -75,7 +75,7 @@ const CampaignDetails = () => {
               </div>
               <div>
                 <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">{state.name}</h4>
-                <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">10 donations</p>
+                <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">{state.donators.length} donations</p>
               </div>
             </div>
           </div>
@@ -92,10 +92,10 @@ const CampaignDetails = () => {
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Donators</h4>
 
               <div className="mt-[20px] flex flex-col gap-4">
-                {donators.length > 0 ? donators.map((item, index) => (
-                  <div key={`${item.donator}-${index}`} className="flex justify-between items-center gap-4">
-                    <p className="font-epilogue font-normal text-[16px] text-[#b2b3bd] leading-[26px] break-ll">{index + 1}. {item.donator}</p>
-                    <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] break-ll">{item.donation}</p>
+                {state.donators.length > 0 ? state.donators.map((item, index) => (
+                  <div key={index} className="flex justify-between items-center gap-4">
+                    <p className="font-epilogue font-normal text-[16px] text-[#b2b3bd] leading-[26px] break-ll">{index + 1}. {item.donator.name}</p>
+                    <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] break-ll">$ {item.donator.donation}</p>
                   </div>
                 )) : (
                   <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">No donators yet. Be the first one!</p>

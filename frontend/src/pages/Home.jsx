@@ -11,7 +11,6 @@ const Home = () => {
 
   const fetchCampaigns = () => {
     setIsLoading(true);
-    // const data = await getCampaigns();
     axios.get('http://localhost:5000/allCampaigns')
       .then((res) => {
         setCampaigns(res.data);
@@ -26,7 +25,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchCampaigns()
-  }, []);
+  },[]);
 
   return (
     <DisplayCampaigns 
