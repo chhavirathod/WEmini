@@ -17,17 +17,14 @@ const CampaignDetails = () => {
 
   const remainingDays = daysLeft(state.deadline);
 
-  const fetchDonators = () => {
+  useEffect(() => {
+    // sets donators
     axios.get(`http://localhost:5000/getCampaign/${state._id}`)
     .then((res)=>{
       setDonators(res.data.donators)
 
     })
     .catch((e)=>{console.log(e)})
-  }
-
-  useEffect(() => {
-    fetchDonators();
   }, [])
 
   const handleDonate = () => {
@@ -51,7 +48,8 @@ const CampaignDetails = () => {
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-1 flex-col">
           <img src={state.image} alt="campaign" className="w-full h-[410px] object-cover rounded-xl"/>
-          <div className="relative w-full h-[5px] bg-[#3a3a43] mt-2">
+          <p className='mt-4 text-xl font-semibold'>Goal Progress: </p><br/>
+          <div className="relative w-full h-[5px] bg-[#3a3a43] -mt-4">
             <div className="absolute h-full bg-[#4acd8d]" style={{ width: `${calculateBarPercentage(state.target, state.amountCollected)}%`, maxWidth: '100%'}}>
             </div>
           </div>
@@ -131,8 +129,8 @@ const CampaignDetails = () => {
                 title="Fund Campaign"
                 styles="w-full bg-[#8c6dfd]"
                 handleClick={() => {
-                  handleDonate()
-                  navigate('')
+                  handleDonate();
+                  navigate('/');
                 }}
               />
             </div>

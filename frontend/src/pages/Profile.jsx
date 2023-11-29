@@ -28,7 +28,6 @@ const Profile = () => {
 
   useEffect(() => {
     fetchCampaigns();
-    console.log(campaigns)
   }, []);
 
   return (

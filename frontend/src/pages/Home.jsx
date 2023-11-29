@@ -9,8 +9,10 @@ const Home = () => {
 
   // const { address, contract, getCampaigns } = useStateContext();
 
-  const fetchCampaigns = () => {
+  useEffect(() => {
     setIsLoading(true);
+
+    //fetch campaigns
     axios.get('http://localhost:5000/allCampaigns')
       .then((res) => {
         setCampaigns(res.data);
@@ -20,11 +22,7 @@ const Home = () => {
         console.log(e);
         setIsLoading(false);
       })
-    
-  }
 
-  useEffect(() => {
-    fetchCampaigns()
   },[]);
 
   return (

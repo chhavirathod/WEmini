@@ -27,14 +27,8 @@ router.get('/viewAllUsers', (req,res) =>{
         .catch((err) => console.log(err))
 })
 
-router.get('/user/:id' , (req,res) => {
-    User.findOne({_id: req.params.id})
-        .then((user) =>{
-            if(user){
-                res.status(200).send(user);
-            }
-        })
-        .catch((e)=>{console.log(e)})
+router.get('/currentUser' ,authenticate, (req,res) => {
+    res.status(200).send(req.rootUser)
 })
 
 router.get('/profile' , authenticate , (req,res) => {
