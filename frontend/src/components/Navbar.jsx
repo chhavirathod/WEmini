@@ -15,6 +15,8 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState('dashboard');
   const [toggleDrawer, setToggleDrawer] = useState(false);
+  let navlinksList;
+  !state ? navlinksList = navlinks.filter((links) => links.name != 'logout') : navlinksList = navlinks ;
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
@@ -76,7 +78,7 @@ const Navbar = () => {
 
           <div className={`absolute top-[60px] right-0 left-0 bg-[#1c1c24] z-10 shadow-secondary py-4 ${!toggleDrawer ? '-translate-y-[100vh]' : 'translate-y-0'} transition-all duration-700`}>
             <ul className="mb-4">
-              {navlinks.map((link) => (
+              {navlinksList.map((link) => (
                 <li
                   key={link.name}
                   className={`flex p-4 ${isActive === link.name && 'bg-[#3a3a43]'}`}
@@ -84,6 +86,10 @@ const Navbar = () => {
                     setIsActive(link.name);
                     setToggleDrawer(false);
                     navigate(link.link);
+                    if(link.name === 'logout'){
+                      Logout()
+                      dispatch({type: "USER" , payload : false})
+                    }
                   }}
                 >
                   <img 
@@ -98,13 +104,30 @@ const Navbar = () => {
               ))}
             </ul>
 
-            <div className="flex mx-4">
-            <CustomButton 
-              btnType="button"
-              title='Create a campaign' 
-              styles='bg-[#1dc071]'
-              handleClick={() => { navigate('create-campaign')}}
-            />
+            <div className="flex flex-wrap gap-x-48 gap-y-5 mx-4">
+              {state ? 
+              <CustomButton 
+                btnType="button"
+                title='Create a campaign' 
+                styles='bg-[#1dc071]'
+                onClick={() => {setToggleDrawer(false);}}
+                handleClick={() => { 
+                  navigate('create-campaign');
+                  setToggleDrawer(false);
+                }}
+              /> :
+              <>
+                <Login handleClick={() => { 
+                  navigate('/');
+                  setToggleDrawer(false);
+                }}/>
+
+                <Register handleClick={() => { 
+                  navigate('/');
+                  setToggleDrawer(false);
+                }}/>
+              </>
+              }
             </div>
           </div>
         </div>

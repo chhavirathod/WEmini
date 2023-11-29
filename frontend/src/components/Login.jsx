@@ -8,7 +8,7 @@ import Register from './Register'
 import { UserContext } from "../App";
 
 
-export default function Login() {
+export default function Login(props) {
 
   const {state , dispatch} = useContext(UserContext);
 
@@ -52,20 +52,21 @@ export default function Login() {
           toast.error(err.response.data.message);
         }
       })
+      props.handleClick()
   }
 
   return (
     <>
       <Button 
-        onPress={onOpen}  
-        className="font-epilogue font-semibold text-[16px] leading-[26px] text-white min-h-[52px] px-4 rounded-[10px] bg-[#1dc071]"
+        onPress={onOpen} 
+        className="font-epilogue font-semibold text-[16px] leading-[26px] text-white min-h-[48px] px-4 rounded-[10px] bg-[#1dc071]"
         >
         Login
       </Button>
       <Modal 
         isOpen={isOpen} 
         onOpenChange={onOpenChange}
-        placement="top-center"
+        placement="center"
         backdrop="blur"
         // className="px-4 py-2"
       >

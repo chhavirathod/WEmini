@@ -130,7 +130,10 @@ const CampaignDetails = () => {
                 btnType="button"
                 title="Fund Campaign"
                 styles="w-full bg-[#8c6dfd]"
-                handleClick={handleDonate}
+                handleClick={() => {
+                  handleDonate()
+                  navigate('')
+                }}
               />
             </div>
           </div>

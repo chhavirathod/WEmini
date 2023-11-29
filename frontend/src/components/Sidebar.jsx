@@ -30,21 +30,22 @@ const Sidebar = () => {
       <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4 mt-12">
         <div className="flex flex-col justify-center items-center gap-3">
           {navlinks.map((link) => (
-            <Icon 
-              key={link.name}
-              {...link}
-              isActive={isActive}
-              handleClick={() => {
-                if(!link.disabled) {
-                  setIsActive(link.name);
-                  navigate(link.link);
-                if(link.name === 'logout'){
-                  Logout()
-                  dispatch({type: "USER" , payload : false})
-                }
-                }
-              }}
-            />
+            <div key={link.name} className='rounded-[15px] hover:bg-[#3f3f3f]'>
+              <Icon 
+                {...link}
+                isActive={isActive}
+                handleClick={() => {
+                  if(!link.disabled) {
+                    setIsActive(link.name);
+                    navigate(link.link);
+                  if(link.name === 'logout'){
+                    Logout()
+                    dispatch({type: "USER" , payload : false})
+                  }
+                  }
+                }}
+              />
+            </div>
           ))}
         </div>
 

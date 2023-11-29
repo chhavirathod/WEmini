@@ -48,20 +48,21 @@ export default function App() {
           toast.error(err.response.data.message);
         }
       })
+      props.handleClick()
   }
 
   return (
     <>
       <Button 
         onPress={onOpen}  
-        className="font-epilogue font-semibold text-[16px] leading-[26px] text-white min-h-[52px] px-4 rounded-[10px] bg-[#1dc071]"
+        className="font-epilogue font-semibold text-[16px] leading-[26px] text-white min-h-[48px] px-4 rounded-[10px] bg-[#1dc071]"
         >
         Sign Up
       </Button>
       <Modal 
         isOpen={isOpen} 
         onOpenChange={onOpenChange}
-        placement="top-center"
+        placement="center"
         backdrop="blur"
         // className="px-4 py-2"
       >
@@ -119,7 +120,7 @@ export default function App() {
                   >
                     Remember me
                   </Checkbox>
-                  <Link color="primary" href="#"  size="sm" onPress={onClose} onClick={()=>{return <Login/>}}>
+                  <Link color="primary" href="#" size="sm" onPress={onClose} onClick={()=>{return <Login/>}}>
                     Already have an Account?
                   </Link>
                 </div>
