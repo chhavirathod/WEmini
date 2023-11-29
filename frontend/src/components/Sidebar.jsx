@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { logo, sun } from '../assets';
 import { navlinks } from '../constants';
 import Logout from './Logout';
+import { UserContext } from '../App';
 
 const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
   <div className={`w-[48px] h-[48px] rounded-[10px] ${isActive && isActive === name && 'bg-[#2c2f32]'} flex justify-center items-center ${!disabled && 'cursor-pointer'} ${styles}`} onClick={handleClick}>
@@ -16,6 +17,7 @@ const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
 )
 
 const Sidebar = () => {
+  const {state , dispatch} = useContext(UserContext)
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState('dashboard');
 
@@ -38,6 +40,7 @@ const Sidebar = () => {
                   navigate(link.link);
                 if(link.name === 'logout'){
                   Logout()
+                  dispatch({type: "USER" , payload : false})
                 }
                 }
               }}

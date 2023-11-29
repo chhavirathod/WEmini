@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
 import {MailIcon} from '../assets';
 import {LockIcon} from '../assets';
 import axios from "axios";
 import {ToastContainer, toast} from 'react-toastify';
 import Register from './Register'
+import { UserContext } from "../App";
+
 
 export default function Login() {
+
+  const {state , dispatch} = useContext(UserContext);
+
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [ form , setForm ] = useState({
     email: "",
@@ -37,6 +42,7 @@ export default function Login() {
     axios.post('http://localhost:5000/login' , form ,{withCredentials:true , credentials: "include"})
       .then((res) => {
         if(res.status === 200){
+          dispatch({type: "USER" , payload: true})
           toast.success(res.data.message)
         }
       })

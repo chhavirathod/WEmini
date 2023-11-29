@@ -1,4 +1,5 @@
 import React from 'react'
+import Logout from './Logout'
 
 const CustomButton = ({ btnType, title, handleClick, styles }) => {
   return (

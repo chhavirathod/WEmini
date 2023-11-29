@@ -1,5 +1,7 @@
 import axios from "axios"
 import { toast } from "react-toastify"
+import { useContext } from "react"
+import { UserContext } from "../App"
 
 const Logout = () => {
     axios.get('http://localhost:5000/logout', {withCredentials: true})
