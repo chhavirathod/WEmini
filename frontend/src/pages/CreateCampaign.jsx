@@ -17,6 +17,7 @@ const CreateCampaign = () => {
     name: '',
     title: '',
     description: '',
+    towards: '',
     target: '', 
     deadline: '',
     image: ''
@@ -74,11 +75,19 @@ const CreateCampaign = () => {
         </div>
 
         <FormField 
-            labelName="Story *"
-            placeholder="Write your story"
+            labelName="Description *"
+            placeholder="Write your Campaign Description"
             isTextArea
             value={form.description}
             handleChange={(e) => handleFormFieldChange('description', e)}
+          />
+
+          <FormField 
+            labelName="Towards *"
+            placeholder="Example: Education/Charity"
+            inputType="text"
+            value={form.towards}
+            handleChange={(e) => handleFormFieldChange('towards', e)}
           />
 
         <div className="w-full flex justify-center items-center p-4 bg-[#8c6dfd] h-[120px] rounded-[10px]">
@@ -89,7 +98,7 @@ const CreateCampaign = () => {
         <div className="flex flex-wrap gap-[40px]">
           <FormField 
             labelName="Goal *"
-            placeholder="ETH 0.50"
+            placeholder="$ 1500"
             inputType="text"
             value={form.target}
             handleChange={(e) => handleFormFieldChange('target', e)}
@@ -104,7 +113,7 @@ const CreateCampaign = () => {
         </div>
 
         <FormField 
-            labelName="Campaign image *"
+            labelName="Campaign image URL *"
             placeholder="Place image URL of your campaign"
             inputType="url"
             value={form.image}

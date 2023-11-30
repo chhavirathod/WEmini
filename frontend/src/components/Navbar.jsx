@@ -5,12 +5,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CustomButton } from './';
 import { logo, menu, search, thirdweb } from '../assets';
 import { navlinks } from '../constants';
-import Login from './Login';
+import Login from './Modal';
 import Register from './Register';
 import { UserContext } from '../App';
 import Logout from './Logout';
 import AvatarIcon from './AvatarIcon';
 import { Avatar } from '@nextui-org/react';
+import Modal from './Modal';
 
 const Navbar = () => {
   const {state , dispatch} =useContext(UserContext)
@@ -48,6 +49,7 @@ const Navbar = () => {
             handleClick={() => {
               Logout()
               dispatch({type: "USER" , payload : false})
+              navigate('/')
             }}
           />
 
@@ -55,8 +57,18 @@ const Navbar = () => {
           
         </> :
           <>
-            <Login/>
-            <Register/>
+            <Modal 
+              formType="Login" 
+              handleClick={() => {
+                navigate('/');
+              }}
+            />
+            <Modal 
+              formType="Register"
+              handleClick={() => { 
+                navigate('/');
+              }}
+            />
           </>
         }
       </div>
@@ -120,15 +132,21 @@ const Navbar = () => {
                 }}
               /> :
               <>
-                <Login handleClick={() => { 
-                  navigate('/');
-                  setToggleDrawer(false);
-                }}/>
+                <Modal 
+                  handleClick={() => { 
+                    navigate('/');
+                    setToggleDrawer(false);
+                  }}
+                  formType="Login"
+                  />
 
-                <Register handleClick={() => { 
+                <Modal 
+                handleClick={() => { 
                   navigate('/');
                   setToggleDrawer(false);
-                }}/>
+                }}
+                formType="Register"
+                />
               </>
               }
             </div>

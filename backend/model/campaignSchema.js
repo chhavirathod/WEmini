@@ -15,6 +15,10 @@ const campaignSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    towards:{
+        type: String,
+        required: true
+    },
     target:{
         type: Number,
         required: true

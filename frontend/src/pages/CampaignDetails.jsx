@@ -22,23 +22,21 @@ const CampaignDetails = () => {
     axios.get(`http://localhost:5000/getCampaign/${state._id}`)
     .then((res)=>{
       setDonators(res.data.donators)
-
     })
     .catch((e)=>{console.log(e)})
   }, [])
 
   const handleDonate = () => {
     setIsLoading(true);
-
     axios.post('http://localhost:5000/donate' , {campaign: state, donation: amount} , {withCredentials: true})
       .then((res)=>{
         console.log('Donated: '+ amount + ` to ${state.title}` )
         toast.success(res.data.message)
       })
       .catch((e)=>{toast.error("Error : " + e)})
-
-    navigate('/')
     setIsLoading(false);
+    navigate('/')
+
   }
 
   return (
@@ -130,7 +128,6 @@ const CampaignDetails = () => {
                 styles="w-full bg-[#8c6dfd]"
                 handleClick={() => {
                   handleDonate();
-                  navigate('/');
                 }}
               />
             </div>

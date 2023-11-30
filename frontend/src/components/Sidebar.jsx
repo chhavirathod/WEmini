@@ -5,6 +5,7 @@ import { logo, sun } from '../assets';
 import { navlinks } from '../constants';
 import Logout from './Logout';
 import { UserContext } from '../App';
+import { toast } from 'react-toastify';
 
 const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
   <div className={`w-[48px] h-[48px] rounded-[10px] ${isActive && isActive === name && 'bg-[#2c2f32]'} flex justify-center items-center ${!disabled && 'cursor-pointer'} ${styles}`} onClick={handleClick}>
@@ -35,13 +36,24 @@ const Sidebar = () => {
                 {...link}
                 isActive={isActive}
                 handleClick={() => {
-                  if(!link.disabled) {
-                    setIsActive(link.name);
-                    navigate(link.link);
-                  if(link.name === 'logout'){
-                    Logout()
-                    dispatch({type: "USER" , payload : false})
+                  if(!link.disabled && link.name === 'Logout'){
+                    if(state){
+                      Logout();
+                      dispatch({type: "USER" , payload : false});
+                      navigate('/');
+                    }
+                    else{
+                      toast.info("Please login first!")
+                    }
                   }
+                  else if(!link.disabled) {
+                    if(state || link.name === "Dashboard"){
+                      setIsActive(link.name);
+                      navigate(link.link);
+                    }
+                    else{
+                      toast.info("Please login first!")
+                    }
                   }
                 }}
               />

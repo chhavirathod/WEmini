@@ -156,9 +156,9 @@ router.post('/login' , (req , res) => {
 })
 
 router.post('/addCampaign' , authenticate , (req,res) => {
-    const { name, title, description , target, deadline, image } = req.body
+    const { name, title, description, towards, target, deadline, image } = req.body
     
-    if( !name || !title || !description || !target || !deadline || !image){
+    if( !name || !title || !description|| !towards || !target || !deadline || !image){
         res.status(400).json({error: "Pls Fill all the fields"})
     }
 
@@ -168,7 +168,7 @@ router.post('/addCampaign' , authenticate , (req,res) => {
                 return res.status(422).json({message: "Campaign already Exists"})
             }
 
-            const campaign = new Campaign({name, title, description , target, deadline, image})
+            const campaign = new Campaign({name, title, description, towards, target, deadline, image})
             campaign.save()
                 .then(() => {
                     res.status(201).json({message: "Campaign added Succesfully"})
