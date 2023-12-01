@@ -1,10 +1,10 @@
 import React, { createContext, useReducer } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Sidebar, Navbar } from './components';
-import { Home, Profile, CreateCampaign, CampaignDetails } from './pages'
+import { Home, Profile, CreateCampaign, CampaignDetails, UserDonation } from './pages'
+import { initialState , reducer } from './UseReducer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { initialState , reducer } from './UseReducer';
 
 export const UserContext = createContext();
 
@@ -26,6 +26,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/create-campaign" element={<CreateCampaign />} />
             <Route path="/campaign-details/:id" element={<CampaignDetails />} />
+            <Route path="/payments" element={<UserDonation/>}/>
           </Routes>
           
         </div>

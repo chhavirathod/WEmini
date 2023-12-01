@@ -60,7 +60,6 @@ router.get('/logout' , (req,res) => {
 router.post('/getManyCampaigns' , (req,res) => {
     const list = req.body
     let c_list =[]
-    // console.log(list[0].campaign.campaign_id)
     list.map((item) =>{
         c_list.push(item.campaign.campaign_id)
     })
@@ -70,8 +69,36 @@ router.post('/getManyCampaigns' , (req,res) => {
             if(campaigns){
                 res.status(200).send(campaigns)
             }
+            else{
+                res.status(400).send("Error")
+            }
         })
         .catch((e)=>console.log(e))
+})
+
+router.post('/getManyDonatedCampaigns' , (req,res) => {
+    const list = req.body
+    let c_list =[]
+    let d_list =[]
+    var c = []
+    // console.log(list[0].campaign.campaign_id)
+    list.map((item) =>{
+        c_list.push(item.campaign.campaign_id)
+        d_list.push(item.campaign.donation)
+    })
+    // console.log(c_list)
+    c_list.map((item) => {
+        Campaign.findOne({ _id: item })
+        .then((campaign)=>{
+            if(campaign){
+                c.push(campaign);
+                if(c.length == d_list.length){
+                    return res.status(200).json({campaigns: c, donations: d_list})
+                }
+            }
+        })
+        .catch((e)=>console.log(e))
+    })
 })
 
 router.post('/register' , (req , res) => {
@@ -200,7 +227,6 @@ router.post('/donate' , authenticate , (req,res) => {
         {  
             amountCollected: campaign.amountCollected + Number(donation) , 
             $push: {donators:{donator:{_id: req.UserID, name: req.rootUser.name , donation: Number(donation)}}}
-            
         }
         )
         .then(()=>{})
@@ -216,8 +242,6 @@ router.post('/donate' , authenticate , (req,res) => {
         )
         .then(()=>{res.status(201).json({message :`Successfully Donated $${donation} to ${campaign.title}`})})
         .catch((e)=>{console.log(e)})
-
-        
 })
 
 module.exports = router

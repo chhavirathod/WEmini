@@ -8,22 +8,24 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
 
-  const fetchCampaigns = async () => {
+  const fetchCampaigns = () => {
     setIsLoading(true);
-    axios.get('http://localhost:5000/profile',{withCredentials: true})
-    .then((res) => {
+
+    setTimeout(() => {
+      axios.get('http://localhost:5000/profile',{withCredentials: true})   //returns rootUser
+      .then((res) => {
       // console.log(res.data.yourCampaigns)
 
-      //returns list of campaigns from id's in yourcampaigns
-      axios.post(`http://localhost:5000/getManyCampaigns`, res.data.yourCampaigns )
+      axios.post(`http://localhost:5000/getManyCampaigns`, res.data.yourCampaigns ) //returns list of campaigns from id's in yourCampaigns
         .then((res) => {
-          // console.log(res.data)
+          console.log(res.data)
           setCampaigns(res.data)
         })
         .catch((err)=>console.log(err))
-    })
-    .catch((e)=>{console.log(e)})
-    setIsLoading(false);
+      })
+      .catch((e)=>{console.log(e)})
+      setIsLoading(false);
+    }, 700);
   }
 
   useEffect(() => {

@@ -10,7 +10,6 @@ const Home = () => {
     setIsLoading(true);
     //fetch campaigns
     setTimeout(() => {
-      console.log('axios call')
       axios.get('http://localhost:5000/allCampaigns')
       .then((res) => {
         setCampaigns(res.data);
