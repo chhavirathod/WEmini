@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { CountBox, CustomButton, Loader } from '../components';
@@ -6,6 +6,7 @@ import { calculateBarPercentage, daysLeft } from '../utils';
 import { thirdweb } from '../assets';
 import  axios  from 'axios';
 import { toast } from 'react-toastify';
+import { Button } from '@nextui-org/react';
 
 const CampaignDetails = () => {
   const { state } = useLocation();
@@ -14,6 +15,7 @@ const CampaignDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState('');
   const [donators, setDonators] = useState([]);
+  const [checkCampaign , setCheckCampaign] = useState(false)
 
   const remainingDays = daysLeft(state.deadline);
 
@@ -24,6 +26,8 @@ const CampaignDetails = () => {
       setDonators(res.data.donators)
     })
     .catch((e)=>{console.log(e)})
+
+    checkUser();
   }, [])
 
   const handleDonate = () => {
@@ -36,7 +40,32 @@ const CampaignDetails = () => {
       .catch((e)=>{toast.error("Error : " + e)})
     setIsLoading(false);
     navigate('/')
+  }
 
+  const handleDelete = () =>{
+    axios.post('http://localhost:5000/deleteCampaign', {_id: state._id} , {withCredentials: true})
+          .then((res) => {
+            if(res.status === 200){
+              toast.success("Campaign deleted Succesfully")
+              navigate('/')
+            } 
+            else{
+              toast.error("Campaign couldn't be deleted")
+            }
+        })
+        .catch((e)=>console.log(e))
+  }
+
+  const checkUser = () => {
+    axios.post('http://localhost:5000/checkCampaign', {title: state.title} , {withCredentials: true})
+          .then((res) => {
+            if(res.data.maker.name === res.data.requester.name) 
+              setCheckCampaign(true)
+        })
+        .catch((e)=>{
+          console.log(e);
+          setCheckCampaign(false)
+      })
   }
 
   return (
@@ -54,7 +83,7 @@ const CampaignDetails = () => {
         </div>
 
         <div className="flex md:w-[150px] w-full flex-wrap justify-between gap-[30px]">
-          <CountBox title="Days Left" value={remainingDays} />
+          <CountBox title="Days Left" value={remainingDays > 0 ? remainingDays : "Ended"} />
           <CountBox title={`Raised of ${state.target}`} value={state.amountCollected} />
           <CountBox title="Total Backers" value={donators.length} />
         </div>
@@ -63,7 +92,7 @@ const CampaignDetails = () => {
       <div className="mt-[60px] flex lg:flex-row flex-col gap-5">
         <div className="flex-[2] flex flex-col gap-[40px]">
           <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">{state.title}</h4>
+            <h4 className="font-epilogue font-semibold text-[28px] text-white uppercase">{state.title}</h4>
 
             <div className="mt-[20px] flex flex-row items-center flex-wrap gap-[14px]">
               <div className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32] cursor-pointer">
@@ -71,8 +100,8 @@ const CampaignDetails = () => {
               </div>
               <div>
                 <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">{state.name}</h4>
-                <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">{state.donators.length} donations</p>
-              </div>
+                {/* <p className="mt-[4px] font-epilogue font-normal text-[12px] text-[#808191]">{state.donators.length} donations</p> */}
+              </div>    
             </div>
           </div>
 
@@ -85,9 +114,9 @@ const CampaignDetails = () => {
           </div>
 
           <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Donators</h4>
+            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Donators ({state.donators.length})</h4>
 
-              <div className="mt-[20px] flex flex-col gap-4">
+              <div className="mt-[20px] flex flex-col gap-4 mb-8">
                 {state.donators.length > 0 ? state.donators.map((item, index) => (
                   <div key={index} className="flex justify-between items-center gap-4">
                     <p className="font-epilogue font-normal text-[16px] text-[#b2b3bd] leading-[26px] break-ll">{index + 1}. {item.donator.name}</p>
@@ -97,20 +126,25 @@ const CampaignDetails = () => {
                   <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">No donators yet. Be the first one!</p>
                 )}
               </div>
+              {checkCampaign && 
+                <Button onPress={()=>{handleDelete()}} color="danger" variant="bordered" className='text-center mb-24 hover:border-[#f31260]'>
+                  Delete Campaign
+                </Button>
+              }
           </div>
         </div>
 
         <div className="flex-1">
-          <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Funding</h4>   
+          <h4 className="font-epilogue font-semibold text-[24px] text-white uppercase">Funding</h4>   
 
-          <div className="mt-[20px] flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
+          <div className="mt-[10px] flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
             <p className="font-epilogue fount-medium text-[20px] leading-[30px] text-center text-[#808191]">
               Fund this campaign
             </p>
-            <div className="mt-[30px]">
+            <div className="mt-[20px]">
               <input 
                 type="number"
-                placeholder="ETH 0.1"
+                placeholder="$100"
                 step="0.01"
                 className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
                 value={amount}
@@ -119,7 +153,7 @@ const CampaignDetails = () => {
 
               <div className="my-[20px] p-4 bg-[#13131a] rounded-[10px]">
                 <h4 className="font-epilogue font-semibold text-[14px] leading-[22px] text-white">Back it because you believe in it.</h4>
-                <p className="mt-[20px] font-epilogue font-normal leading-[22px] text-[#808191]">Support the project for no reward, just because it speaks to you.</p>
+                <p className="mt-[10px] font-epilogue font-normal leading-[22px] text-[#808191]">Support the project for no reward, just because it speaks to you.</p>
               </div>
 
               <CustomButton 

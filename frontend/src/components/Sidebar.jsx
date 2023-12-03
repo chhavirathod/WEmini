@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { logo, sun } from '../assets';
@@ -21,7 +21,7 @@ const Sidebar = () => {
   const {state , dispatch} = useContext(UserContext)
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState('dashboard');
-
+   
   return (
     <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh]">
       <Link to="/">

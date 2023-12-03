@@ -10,7 +10,7 @@ function Login({handleChange , onClose, setFormType}) {
         autoFocus
         endContent={
         <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-        }w
+        }
         label="Email"
         placeholder="Enter your email"
         variant="bordered"
@@ -29,12 +29,12 @@ function Login({handleChange , onClose, setFormType}) {
     <div className="flex py-2 px-1 justify-between">
         <Checkbox
         classNames={{
-            label: "text-small",
+            label: "text-xs md:text-sm",
         }}
         >
         Remember me
         </Checkbox>
-        <Link color="primary" href="#" size="sm" onPress={()=>setFormType("Register")}>
+        <Link className='text-xs md:text-sm' color="primary" href="#" onPress={()=>setFormType("Register")}>
         Dont have an account?
         </Link>
     </div>

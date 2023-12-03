@@ -12,21 +12,44 @@ import Logout from './Logout';
 import AvatarIcon from './AvatarIcon';
 import { Avatar } from '@nextui-org/react';
 import Modal from './Modal';
+import {toast} from 'react-toastify'
 
 const Navbar = () => {
-  const {state , dispatch} =useContext(UserContext)
+  const {state , dispatch} = useContext(UserContext)
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState('dashboard');
   const [toggleDrawer, setToggleDrawer] = useState(false);
+  const [searchValue , setSearchValue] = useState("");
   let navlinksList;
   !state ? navlinksList = navlinks.filter((links) => links.name != 'Logout') : navlinksList = navlinks ;
 
+  const changeHandler = (e) => {
+    setSearchValue(e.target.value);
+  }
+
   return (
-    <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
+    <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6 ">
       <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
-        <input type="text" placeholder="Search for campaigns" className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none" />
+        <input 
+          type="text"  
+          placeholder="Search for campaigns"
+          value={searchValue} 
+          className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none" 
+          onChange={changeHandler}
+        />
         
-        <div className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
+        <div 
+          className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer"
+          onClick={() => {
+            if(searchValue === "" || searchValue === undefined || searchValue === " ")
+              toast.warning('Search Bar is empty!');
+            else    
+              {
+                navigate(`/search/${searchValue}`);
+                setSearchValue("");
+              }
+          }}
+        >
           <img src={search} alt="search" className="w-[15px] h-[15px] object-contain"/>
         </div>
       </div>
@@ -58,7 +81,7 @@ const Navbar = () => {
         </> :
           <>
             <Modal 
-              formType="Login" 
+              formType="Login"
               handleClick={() => {
                 navigate('/');
               }}
@@ -81,7 +104,10 @@ const Navbar = () => {
 
           <div>
             {state ? 
-              <Avatar isBordered src="https://i.pravatar.cc/150?u=a042581f4e29026024d" onClick={() => {setToggleDrawer((prev) => !prev)}}/> :
+              <Avatar 
+              isBordered 
+              src="https://i.pravatar.cc/150?u=a042581f4e29026024d" 
+              onClick={() => {setToggleDrawer((prev) => !prev)}}/> :
               <img 
                 src={menu}
                 alt="menu"

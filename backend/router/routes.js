@@ -57,6 +57,46 @@ router.get('/logout' , (req,res) => {
     console.log(res.cookie)
 })
 
+router.post('/deleteCampaign' , authenticate , (req,res) => {
+    Campaign.deleteOne({_id:req.body._id})
+        .then(()=>{
+            res.status(200).send("Deleted")
+        })
+        .catch((e) => res.status(400).send(e))
+    // User.updateOne({_id: req.UserID} , {yourCampaigns: { $pull: {campaign: { campaign_id: req.body._id }}}})
+    //     .then(() => {
+    //         console.log(`deleted ${req.body._id}`)
+    //         res.status(200).send("Deleted")
+    //     })
+    //     .catch((e) => res.status(400).send(e))
+})
+
+router.post('/checkCampaign' , authenticate , (req,res) => {
+    console.log(req.body)
+    User.findOne({_id:req.UserID , "yourCampaigns.campaign.title": req.body.title})
+        .then((user)=>{
+            res.status(200).send({maker: user , requester: req.rootUser})
+        })
+        .catch((e) => console.log(e))
+})
+
+router.post('/searchCampaigns' , (req,res) => {
+    const title = req.body.title;
+    console.log("Title to search: " , req.body.title)
+    Campaign.find({ title: title })
+        .then((campaigns)=>{
+            if(campaigns){
+                console.log("found campaign : ",campaigns)
+                res.status(200).send(campaigns)
+
+            }
+            else{
+                res.status(400).send("Error")
+            }
+        })
+        .catch((e)=>console.log(e))
+})
+
 router.post('/getManyCampaigns' , (req,res) => {
     const list = req.body
     let c_list =[]
@@ -194,18 +234,21 @@ router.post('/addCampaign' , authenticate , (req,res) => {
             if(existingCampaign){
                 return res.status(422).json({message: "Campaign already Exists"})
             }
-
-            const campaign = new Campaign({name, title, description, towards, target, deadline, image})
-            campaign.save()
+            else
+            {
+                const campaign = new Campaign({name, title, description, towards, target, deadline, image})
+                campaign.save()
                 .then(() => {
                     res.status(201).json({message: "Campaign added Succesfully"})
                 })
                 .catch((e) => res.status(500).json({message: "Failed to add campaign"}))
+            }
         
             })
         .catch((e) => {console.log(e)})
 
-    Campaign.findOne({name: name , title: title})
+        setTimeout(() => {
+            Campaign.findOne({title: title})
             .then((campaign) => {
                 console.log(campaign)
                 if(campaign){
@@ -217,6 +260,7 @@ router.post('/addCampaign' , authenticate , (req,res) => {
                 console.log("didnt update User")
             })
             .catch((e)=>console.log(e))
+        },500)
 
 })
 

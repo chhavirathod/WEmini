@@ -5,6 +5,7 @@ import { Home, Profile, CreateCampaign, CampaignDetails, UserDonation } from './
 import { initialState , reducer } from './UseReducer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Search from './pages/Search';
 
 export const UserContext = createContext();
 
@@ -27,6 +28,7 @@ const App = () => {
             <Route path="/create-campaign" element={<CreateCampaign />} />
             <Route path="/campaign-details/:id" element={<CampaignDetails />} />
             <Route path="/payments" element={<UserDonation/>}/>
+            <Route path="/search/:title" element={<Search/>}/>
           </Routes>
           
         </div>

@@ -114,7 +114,7 @@ const CreateCampaign = () => {
 
         <FormField 
             labelName="Campaign image URL *"
-            placeholder="Place image URL of your campaign"
+            placeholder="Place image URL for your campaign"
             inputType="url"
             value={form.image}
             handleChange={(e) => handleFormFieldChange('image', e)}

@@ -14,7 +14,7 @@ export default function App(props) {
   const {state , dispatch} = useContext(UserContext);
 
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  const [formType , setFormType] = useState("formType")
+  const [formType , setFormType] = useState("")
   const [ loginForm , setLoginForm ] = useState({
     email: "",
     pwd: ""
@@ -46,7 +46,7 @@ export default function App(props) {
   }
   
 
-
+  //REGISTRATION
   const registerSubmitHandler = () => {
     //validation
     if(!validateEmail(registerForm.email)){
@@ -73,13 +73,14 @@ export default function App(props) {
       setFormType(props.formType);
   }
 
+  // LOGIN
   const loginSubmitHandler = () => {
     //validation
     if(!validateEmail(loginForm.email)){
-      toast.error("Invalid Email");
+      toast.warning("Invalid Email");
     }
     if(!loginForm.email || !loginForm.pwd){
-      toast.error("Please Enter all the fields");
+      toast.warning("Please Enter all the fields");
     }
 
     //post request
