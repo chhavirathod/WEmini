@@ -85,7 +85,7 @@ const CampaignDetails = () => {
         <div className="flex md:w-[150px] w-full flex-wrap justify-between gap-[30px]">
           <CountBox title="Days Left" value={remainingDays > 0 ? remainingDays : "Ended"} />
           <CountBox title={`Raised of ${state.target}`} value={state.amountCollected} />
-          <CountBox title="Total Backers" value={donators.length} />
+          <CountBox title="Total Donators" value={donators.length} />
         </div>
       </div>
 
@@ -106,9 +106,9 @@ const CampaignDetails = () => {
           </div>
 
           <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Story</h4>
+            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">DESCRIPTION</h4>
 
-              <div className="mt-[20px]">
+              <div className="mt-[6px]">
                 <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">{state.description}</p>
               </div>
           </div>
@@ -116,11 +116,13 @@ const CampaignDetails = () => {
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">Donators ({state.donators.length})</h4>
 
-              <div className="mt-[20px] flex flex-col gap-4 mb-8">
+              <div className="mt-[10px] flex flex-col gap-4 mb-8">
                 {state.donators.length > 0 ? state.donators.map((item, index) => (
-                  <div key={index} className="flex justify-between items-center gap-4">
-                    <p className="font-epilogue font-normal text-[16px] text-[#b2b3bd] leading-[26px] break-ll">{index + 1}. {item.donator.name}</p>
-                    <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] break-ll">$ {item.donator.donation}</p>
+                  <div key={index} className="flex gap-4">
+                    <div className='w-full flex justify-between items-center bg-[#1c1c24] px-6 py-4 rounded-lg'>
+                      <p className="font-epilogue font-normal text-[16px] text-[#b2b3bd] leading-[26px] break-ll">{index + 1}. {item.donator.name}</p>
+                      <p className="font-epilogue font-semibold text-[18px] text-[#808191] leading-[26px] break-ll">$ {item.donator.donation}</p>
+                    </div>
                   </div>
                 )) : (
                   <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">No donators yet. Be the first one!</p>
@@ -145,7 +147,7 @@ const CampaignDetails = () => {
               <input 
                 type="number"
                 placeholder="$100"
-                step="0.01"
+                step="1"
                 className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}

@@ -2,7 +2,6 @@ import { React , useState, useEffect} from 'react';
 import { loader } from '../assets';
 import axios from 'axios'
 import { tagType, thirdweb } from '../assets';
-import { daysLeft } from '../utils';
 
 function UserDonation() {
   
