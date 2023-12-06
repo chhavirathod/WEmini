@@ -12,6 +12,7 @@ const DisplayCampaigns = ({ title, notFound, isLoading, campaigns }) => {
   const handleNavigate = (campaign) => {
     navigate(`/campaign-details/${campaign.title}`, { state: campaign })
   }
+  // For the URL
   
   return (
     <div>

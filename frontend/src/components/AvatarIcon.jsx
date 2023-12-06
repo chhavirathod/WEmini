@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Logout from "./Logout";
 import { UserContext } from "../App";
-
+// For name and Email
 export default function AvatarIcon() {
     const {state , dispatch} = useContext(UserContext)
     const navigate = useNavigate()

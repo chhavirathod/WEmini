@@ -9,6 +9,7 @@ const Home = () => {
   useEffect(() => {
     setIsLoading(true);
     //fetch campaigns
+    // Run after 700 Millisecinds the new Campaign
     setTimeout(() => {
       axios.get('http://localhost:5000/allCampaigns')
       .then((res) => {
