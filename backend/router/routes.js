@@ -80,9 +80,9 @@ router.post('/checkCampaign' , authenticate , (req,res) => {
         .catch((e) => console.log(e))
 })
 
-router.post('/searchCampaigns' , (req,res) => {
-    const title = req.body.title;
-    console.log("Title to search: " , req.body.title)
+router.get('/searchCampaigns' , (req,res) => {
+    const {title} = req.query
+    console.log("Title to search: " , title)
     Campaign.find({ title: title })
         .then((campaigns)=>{
             if(campaigns){
