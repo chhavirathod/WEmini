@@ -55,6 +55,8 @@ const campaignSchema = new mongoose.Schema({
     
 })
 
+campaignSchema.index({title: 'text' , towards: 'text'})  // for full text-search
+
 const Campaign = mongoose.model('CAMPAIGN' , campaignSchema)
 
 module.exports = Campaign

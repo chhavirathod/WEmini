@@ -13,7 +13,7 @@ const Search = () => {
   const fetchCampaigns = () => {
     setIsLoading(true);
     setTimeout(() => {
-      axios.get(`http://localhost:5000/searchCampaigns?title=${title}`)
+      axios.get(`http://localhost:5000/searchCampaigns?searchValue=${title}`)
         .then((res) => {
           setCampaigns(res.data)
           setIsLoading(false);

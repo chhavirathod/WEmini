@@ -81,14 +81,16 @@ router.post('/checkCampaign' , authenticate , (req,res) => {
 })
 
 router.get('/searchCampaigns' , (req,res) => {
-    const {title} = req.query
-    console.log("Title to search: " , title)
-    Campaign.find({ title: title })
+    const { searchValue } = req.query
+    console.log("Title to search: " , searchValue)
+    Campaign.find({ $text : {
+        $search : searchValue,
+        $caseSensitive : false
+    }})
         .then((campaigns)=>{
             if(campaigns){
                 console.log("found campaign : ",campaigns)
                 res.status(200).send(campaigns)
-
             }
             else{
                 res.status(400).send("Error")
