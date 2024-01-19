@@ -1,11 +1,11 @@
 import React, { createContext, useReducer } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Sidebar, Navbar } from './components';
-import { Home, Profile, CreateCampaign, CampaignDetails, UserDonation } from './pages'
+import { Home, Profile, CreateCampaign, CampaignDetails, UserDonation, Search, Update } from './pages'
 import { initialState , reducer } from './UseReducer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Search from './pages/Search';
+
 
 export const UserContext = createContext();
 
@@ -30,12 +30,13 @@ const App = () => {
             <Route path="/campaign-details/:id" element={<CampaignDetails />} />
             <Route path="/payments" element={<UserDonation/>}/>
             <Route path="/search/:title" element={<Search/>}/>
+            <Route path="/update/:id" element={<Update/>} />
           </Routes>
           
         </div>
         <ToastContainer
             position="bottom-center"
-            autoClose={2000}
+            autoClose={1000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick

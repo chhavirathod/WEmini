@@ -231,6 +231,7 @@ router.post('/addCampaign' , authenticate , (req,res) => {
         res.status(400).json({error: "Pls Fill all the fields"})
     }
 
+    //adds campaign to the db
     Campaign.findOne({title: title})
         .then((existingCampaign) => {
             if(existingCampaign){
@@ -249,6 +250,7 @@ router.post('/addCampaign' , authenticate , (req,res) => {
             })
         .catch((e) => {console.log(e)})
 
+        //adds campaign id and title to the user db
         setTimeout(() => {
             Campaign.findOne({title: title})
             .then((campaign) => {
@@ -266,6 +268,29 @@ router.post('/addCampaign' , authenticate , (req,res) => {
 
 })
 
+router.post('/update' , (req,res) => {
+    const { id, name, title, description, towards, target, deadline, image } = req.body
+    
+    if( !name || !title || !description|| !towards || !target || !deadline || !image){
+        res.status(400).json({error: "Pls Fill all the fields"})
+    }
+
+    Campaign.updateOne({_id: id } , {
+        name : name,
+        title : title,
+        description : description,
+        towards : towards,
+        target : target,
+        deadline : deadline,
+        image : image
+    })
+    .then(()=>{res.status(201).json({message: "Campaign updated Succesfully"})})
+    .catch((e)=>{
+        console.log(e);
+        res.status(500).json({message: "Failed to update your campaign"});
+    })
+})
+
 router.post('/donate' , authenticate , (req,res) => {
     const { campaign , donation } = req.body
     Campaign.updateOne(
@@ -275,7 +300,7 @@ router.post('/donate' , authenticate , (req,res) => {
             $push: {donators:{donator:{_id: req.UserID, name: req.rootUser.name , donation: Number(donation)}}}
         }
         )
-        .then(()=>{})
+        .then(()=>{console.log(`donated ${donation} to ${campaign.title}`)})
         .catch((e)=>{console.log(e)})
 
     User.updateOne(

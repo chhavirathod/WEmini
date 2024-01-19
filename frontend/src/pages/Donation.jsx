@@ -77,7 +77,6 @@ function UserDonation() {
                             <div className="flex justify-between flex-wrap mt-[15px] gap-2">
                                 <div className="flex flex-col">
                                     <h4 className="font-epilogue font-semibold text-[18px] leading-[22px]">You Donated  ${donations[index]}</h4>
-                                    {/* <p className="mt-[3px] font-epilogue font-semibold text-[18px] leading-[18px] sm:max-w-[150px]">You Donated</p> */}
                                 </div>
 
                             </div>
