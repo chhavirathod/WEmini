@@ -57,7 +57,7 @@ export default function App(props) {
     }
 
     //post request
-    axios.post('http://localhost:5000/register' , registerForm)
+    axios.post('https://venturecrowd-server.vercel.app/register' , registerForm)
       .then((res) => {
         if(res.status === 201){
           toast.success(res.data.message)
@@ -84,7 +84,7 @@ export default function App(props) {
     }
 
     //post request
-    axios.post('http://localhost:5000/login' , loginForm ,{withCredentials:true , credentials: "include"})
+    axios.post('https://venturecrowd-server.vercel.app/login' , loginForm ,{withCredentials:true , credentials: "include"})
       .then((res) => {
         if(res.status === 200){
           dispatch({type: "USER" , payload: true})

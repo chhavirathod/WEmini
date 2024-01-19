@@ -12,11 +12,11 @@ const Profile = () => {
     setIsLoading(true);
 
     setTimeout(() => {
-      axios.get('http://localhost:5000/profile',{withCredentials: true})   //returns rootUser
+      axios.get('https://venturecrowd-server.vercel.app/profile',{withCredentials: true})   //returns rootUser
       .then((res) => {
       // console.log(res.data.yourCampaigns)
 
-      axios.post(`http://localhost:5000/getManyCampaigns`, res.data.yourCampaigns ) //returns list of campaigns from id's in yourCampaigns
+      axios.post(`https://venturecrowd-server.vercel.app/getManyCampaigns`, res.data.yourCampaigns ) //returns list of campaigns from id's in yourCampaigns
         .then((res) => {
           console.log(res.data)
           setCampaigns(res.data)

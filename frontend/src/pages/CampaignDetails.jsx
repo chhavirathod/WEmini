@@ -21,7 +21,7 @@ const CampaignDetails = () => {
 
   useEffect(() => {
     // sets donators
-    axios.get(`http://localhost:5000/getCampaign/${state._id}`)
+    axios.get(`https://venturecrowd-server.vercel.app/getCampaign/${state._id}`)
     .then((res)=>{
       setDonators(res.data.donators)
     })
@@ -32,7 +32,7 @@ const CampaignDetails = () => {
 
   const handleDonate = () => {
     setIsLoading(true);
-    axios.post('http://localhost:5000/donate' , {campaign: state, donation: amount} , {withCredentials: true})
+    axios.post('https://venturecrowd-server.vercel.app/donate' , {campaign: state, donation: amount} , {withCredentials: true})
       .then((res)=>{
         console.log('Donated: '+ amount + ` to ${state.title}` )
         toast.success(res.data.message)
@@ -43,7 +43,7 @@ const CampaignDetails = () => {
   }
 
   const handleDelete = () =>{
-    axios.post('http://localhost:5000/deleteCampaign', {_id: state._id} , {withCredentials: true})
+    axios.post('https://venturecrowd-server.vercel.app/deleteCampaign', {_id: state._id} , {withCredentials: true})
           .then((res) => {
             if(res.status === 200){
               toast.success("Campaign deleted Succesfully")
@@ -61,7 +61,7 @@ const CampaignDetails = () => {
   }
 
   const checkUser = () => {
-    axios.post('http://localhost:5000/checkCampaign', {title: state.title} , {withCredentials: true})
+    axios.post('https://venturecrowd-server.vercel.app/checkCampaign', {title: state.title} , {withCredentials: true})
           .then((res) => {
             if(res.data.maker.name === res.data.requester.name) 
               setCheckCampaign(true)

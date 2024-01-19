@@ -31,7 +31,7 @@ const UpdateCampaign = () => {
       if(exists) {
         setIsLoading(true)
         
-        axios.post('http://localhost:5000/update' , form)
+        axios.post('https://venturecrowd-server.vercel.app/update' , form)
         .then((res)=>{
             toast.success(res.data.message)
             console.log("updated")

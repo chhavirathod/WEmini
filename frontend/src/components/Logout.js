@@ -5,7 +5,7 @@ import { UserContext } from "../App"
 import { useNavigate } from "react-router-dom"
 
 const Logout = () => {
-    axios.get('http://localhost:5000/logout', {withCredentials: true})
+    axios.get('https://venturecrowd-server.vercel.app/logout', {withCredentials: true})
         .then((res) => {
             if(res.status == 200)
             {

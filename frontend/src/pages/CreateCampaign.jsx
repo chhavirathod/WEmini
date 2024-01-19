@@ -34,7 +34,7 @@ const CreateCampaign = () => {
       if(exists) {
         setIsLoading(true)
         
-        axios.post('http://localhost:5000/addCampaign' , form , {withCredentials: true})
+        axios.post('https://venturecrowd-server.vercel.app/addCampaign' , form , {withCredentials: true})
           .then((res)=>{
             toast.success(res.data.message)
           })

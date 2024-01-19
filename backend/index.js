@@ -5,7 +5,7 @@ const cors = require('cors')
 const cookie_parser = require('cookie-parser')
 
 const corsOptions ={
-    origin:'http://localhost:5173', 
+    origin:'https://venturecrowd.vercel.app', 
     credentials:true,              //access-control-allow-credentials:true
     optionSuccessStatus:200
 }

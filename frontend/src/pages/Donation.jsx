@@ -14,10 +14,10 @@ function UserDonation() {
     setIsLoading(true);
 
     setTimeout(() => {
-      axios.get('http://localhost:5000/profile',{withCredentials: true})   //returns rootUser
+      axios.get('https://venturecrowd-server.vercel.app/profile',{withCredentials: true})   //returns rootUser
       .then((res) => {
       // console.log(res.data.donated_campaigns)  
-      axios.post(`http://localhost:5000/getManyDonatedCampaigns`, res.data.donated_campaigns ) //returns list of campaigns from id's in yourCampaigns
+      axios.post(`https://venturecrowd-server.vercel.app/getManyDonatedCampaigns`, res.data.donated_campaigns ) //returns list of campaigns from id's in yourCampaigns
         .then((res) => {
           // console.log(res.data)
           setCampaigns(res.data.campaigns)

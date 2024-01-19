@@ -13,7 +13,7 @@ const Search = () => {
   const fetchCampaigns = () => {
     setIsLoading(true);
     setTimeout(() => {
-      axios.get(`http://localhost:5000/searchCampaigns?searchValue=${title}`)
+      axios.get(`https://venturecrowd-server.vercel.app/searchCampaigns?searchValue=${title}`)
         .then((res) => {
           setCampaigns(res.data)
           setIsLoading(false);

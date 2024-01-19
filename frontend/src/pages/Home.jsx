@@ -11,7 +11,7 @@ const Home = () => {
     //fetch campaigns
     // Run after 700 Millisecinds the new Campaign
     setTimeout(() => {
-      axios.get('http://localhost:5000/allCampaigns')
+      axios.get('https://venturecrowd-server.vercel.app/allCampaigns')
       .then((res) => {
         setCampaigns(res.data);
         setIsLoading(false);

@@ -10,7 +10,7 @@ export default function AvatarMenu() {
     const navigate = useNavigate()
     const [user , setUser] = useState({})
    useEffect(() => {
-        axios.get('http://localhost:5000/currentUser' , {withCredentials: true})
+        axios.get('https://venturecrowd-server.vercel.app/currentUser' , {withCredentials: true})
             .then((res) => {
                 if(res.data){
                   setUser(res.data);
