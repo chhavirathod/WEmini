@@ -27,7 +27,7 @@ const Search = () => {
     setIsLoading(true);
     setTimeout(() => {
       fetchCampaigns();
-    },200)
+    },700)
   }, [title]);
 
   return (

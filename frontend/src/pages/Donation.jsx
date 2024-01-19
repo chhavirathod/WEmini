@@ -33,7 +33,7 @@ function UserDonation() {
     setIsLoading(true);
     setTimeout(() => {
       fetchCampaigns();
-    },200)
+    },700)
   }, []);
 
     return (

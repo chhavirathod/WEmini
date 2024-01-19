@@ -29,7 +29,7 @@ const Profile = () => {
     setIsLoading(true);
     setTimeout(() => {
       fetchCampaigns();
-    },200)
+    },700)
   }, []);
 
   return (
