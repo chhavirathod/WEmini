@@ -96,9 +96,9 @@ const CampaignDetails = () => {
       <div className="mt-[60px] flex lg:flex-row flex-col gap-5">
         <div className="flex-[2] flex flex-col gap-[40px]">
           <div>
-            <h4 className="font-epilogue font-semibold text-[28px] text-center lg:text-left text-white uppercase">{state.title}</h4>
+            <h4 className="font-epilogue font-semibold font-['Ubuntu'] text-[28px] text-center lg:text-left text-white uppercase">{state.title}</h4>
 
-            <div className="mt-[20px] flex flex-row items-center flex-wrap gap-[14px]">
+            <div className="mt-[20px] flex flex-row items-center justify-center lg:justify-start flex-wrap gap-[14px]">
               <div className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-[#2c2f32] cursor-pointer">
                 <img src={thirdweb} alt="user" className="w-[60%] h-[60%] object-contain"/>
               </div>
@@ -110,15 +110,15 @@ const CampaignDetails = () => {
           </div>
 
           <div>
-            <h4 className="font-epilogue font-semibold text-[22px] text-white text-center lg:text-left uppercase">DESCRIPTION</h4>
+            <h4 className="font-epilogue font-semibold font-['Ubuntu'] text-[22px] text-white text-center lg:text-left uppercase">DESCRIPTION</h4>
 
-              <div className="mt-[6px]">
-                <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">{state.description}</p>
-              </div>
+            <div className="mt-[6px]">
+              <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">{state.description}</p>
+            </div>
           </div>
 
           <div>
-            <h4 className="font-epilogue font-semibold text-[22px] text-white text-center lg:text-left uppercase">Donators ({state.donators.length})</h4>
+            <h4 className="font-epilogue font-semibold font-['Ubuntu'] text-[22px] text-white text-center lg:text-left uppercase">Donators ({state.donators.length})</h4>
 
               <div className="mt-[10px] flex flex-col gap-4 mb-8">
                 {state.donators.length > 0 ? state.donators.map((item, index) => (
@@ -132,7 +132,7 @@ const CampaignDetails = () => {
                   <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">No donators yet. Be the first one!</p>
                 )}
               </div>
-              <div className="flex justify-around gap-4">
+              <div className="flex justify-around lg:justify-start gap-4">
                 {checkCampaign && 
                   <Button onPress={()=>{handleDelete()}} color="danger" variant="bordered" className='text-center mb-24 hover:border-[#f31260]'>
                     Delete Campaign
@@ -148,8 +148,9 @@ const CampaignDetails = () => {
           </div>
         </div>
 
+        { remainingDays > 0 ? 
         <div className="flex-1">
-          <h4 className="font-epilogue font-semibold text-[24px] text-white text-center lg:text-left uppercase">Funding</h4>   
+          <h4 className="font-epilogue font-semibold font-['Ubuntu'] text-[24px] text-white text-center lg:text-left uppercase">Funding</h4>   
 
           <div className="mt-[10px] flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
             <p className="font-epilogue fount-medium text-[20px] leading-[30px] text-center text-[#808191]">
@@ -180,7 +181,7 @@ const CampaignDetails = () => {
               />
             </div>
           </div>
-        </div>
+        </div> : null}
       </div>
     </div>
   )

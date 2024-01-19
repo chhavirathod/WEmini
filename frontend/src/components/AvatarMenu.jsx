@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Logout from "./Logout";
 import { UserContext } from "../App";
 // For name and Email
-export default function AvatarIcon() {
+export default function AvatarMenu() {
     const {state , dispatch} = useContext(UserContext)
     const navigate = useNavigate()
     const [user , setUser] = useState({})
@@ -21,7 +21,7 @@ export default function AvatarIcon() {
    },[]) 
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center -ml-3 -mt-1 gap-4">
       <Dropdown placement="bottom-start">
         <DropdownTrigger>
           <User

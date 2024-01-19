@@ -2,15 +2,14 @@ import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 
 // import { useStateContext } from '../context';
-import { CustomButton } from './';
+import { AvatarMenu, CustomButton } from './';
 import { logo, menu, search, thirdweb } from '../assets';
 import { navlinks } from '../constants';
 import Login from './Modal';
 import Register from './Register';
 import { UserContext } from '../App';
 import Logout from './Logout';
-import AvatarIcon from './AvatarIcon';
-import { Avatar } from '@nextui-org/react';
+import { Avatar, AvatarIcon } from '@nextui-org/react';
 import Modal from './Modal';
 import {toast} from 'react-toastify'
 
@@ -76,7 +75,7 @@ const Navbar = () => {
             }}
           />
 
-          <AvatarIcon/>
+          <AvatarMenu/>
           
         </> :
           <>
@@ -98,16 +97,24 @@ const Navbar = () => {
 
       {/* Small screen navigation */}
         <div className="md:hidden flex justify-between items-center relative">
-        <div className="w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer">
+        <div 
+          className="w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer" 
+          onClick={()=>{
+            navigate('/')
+            setToggleDrawer(false)
+          }}>
             <img src={logo} alt="user" className="w-[60%] h-[60%] object-contain" />
           </div>
 
           <div>
             {state ? 
               <Avatar 
-              isBordered 
-              src="https://i.pravatar.cc/150?u=a042581f4e29026024d" 
-              onClick={() => {setToggleDrawer((prev) => !prev)}}/> :
+                isBordered 
+                icon={<AvatarIcon/>}
+                // src="https://i.pravatar.cc/150?u=a042581f4e29026024d" 
+                onClick={() => {setToggleDrawer((prev) => !prev)}}
+              /> 
+              :
               <img 
                 src={menu}
                 alt="menu"
@@ -117,7 +124,7 @@ const Navbar = () => {
             }
           </div>
 
-          <div className={`absolute top-[60px] right-0 left-0 bg-[#1c1c24] z-10 shadow-secondary py-4 ${!toggleDrawer ? '-translate-y-[100vh]' : 'translate-y-0'} transition-all duration-700`}>
+          <div className={`absolute top-[60px] right-0 left-0 bg-[#2a2a31] z-10 rounded-2xl shadow-secondary py-4 ${!toggleDrawer ? '-translate-y-[100vh]' : 'translate-y-0'} transition-all duration-700`}>
             <ul className="mb-4">
               {navlinksList.map((link) => (
                 <li
@@ -126,10 +133,22 @@ const Navbar = () => {
                   onClick={() => {
                     setIsActive(link.name);
                     setToggleDrawer(false);
-                    navigate(link.link);
+
                     if(link.name === 'Logout'){
-                      Logout()
-                      dispatch({type: "USER" , payload : false})
+                      Logout();
+                      dispatch({type: "USER" , payload : false});
+                      navigate('/')
+                    }
+
+                    else if(state){
+                      navigate(link.link);
+                    }
+
+                    else{
+                      if(link.name === "Dashboard")
+                      navigate(link.link);
+                      else
+                      toast.info("Please login first")
                     }
                   }}
                 >
