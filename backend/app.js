@@ -20,6 +20,6 @@ app.use(express.json())
 
 app.use(require('./router/routes'))
 
-// app.get('/' , (req,res) => res.send("Hello"));
+app.get('/' , (req,res) => res.send("Hello"));
 
 app.listen( PORT , () => console.log(`port ${PORT} running`) );
