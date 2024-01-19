@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const Search = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [campaigns, setCampaigns] = useState([]);
   const { title } = useParams();
 
@@ -27,7 +27,7 @@ const Search = () => {
     setIsLoading(true);
     setTimeout(() => {
       fetchCampaigns();
-    },700)
+    },2000)
   }, [title]);
 
   return (

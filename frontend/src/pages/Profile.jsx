@@ -5,7 +5,7 @@ import axios from 'axios';
 // import { useStateContext } from '../context'
 
 const Profile = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [campaigns, setCampaigns] = useState([]);
 
   const fetchCampaigns = () => {
@@ -27,9 +27,9 @@ const Profile = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    setTimeout(() => {
+    setInterval(() => {
       fetchCampaigns();
-    },700)
+    },2000)
   }, []);
 
   return (

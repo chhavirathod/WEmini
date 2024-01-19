@@ -5,7 +5,7 @@ import { tagType, thirdweb } from '../assets';
 
 function UserDonation() {
   
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [campaigns, setCampaigns] = useState([]);
   const [donations , setDonations] = useState([])
   
@@ -31,9 +31,9 @@ function UserDonation() {
 
   useEffect(() => {
     setIsLoading(true);
-    setTimeout(() => {
+    setInterval(() => {
       fetchCampaigns();
-    },700)
+    },2000)
   }, []);
 
     return (
