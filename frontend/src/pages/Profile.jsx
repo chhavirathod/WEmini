@@ -27,9 +27,9 @@ const Profile = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    setInterval(() => {
+    setTimeout(() => {
       fetchCampaigns();
-    },2000)
+    },700)
   }, []);
 
   return (
