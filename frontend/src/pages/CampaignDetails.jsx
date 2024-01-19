@@ -21,13 +21,14 @@ const CampaignDetails = () => {
 
   useEffect(() => {
     // sets donators
-    axios.get(`https://venturecrowd-server.vercel.app/getCampaign/${state._id}`)
-    .then((res)=>{
-      setDonators(res.data.donators)
-    })
-    .catch((e)=>{console.log(e)})
-
-    checkUser();
+    setTimeout(()=>{
+      axios.get(`https://venturecrowd-server.vercel.app/getCampaign/${state._id}`)
+      .then((res)=>{
+        setDonators(res.data.donators)
+      })
+      .catch((e)=>{console.log(e)})
+      checkUser();
+    },500)
   }, [])
 
   const handleDonate = () => {
