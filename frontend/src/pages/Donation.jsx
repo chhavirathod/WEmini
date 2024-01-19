@@ -11,12 +11,10 @@ function UserDonation() {
   
 
   const fetchCampaigns = () => {
-    setIsLoading(true);
 
-    setTimeout(() => {
-      axios.get('https://venturecrowd-server.vercel.app/profile',{withCredentials: true})   //returns rootUser
-      .then((res) => {
-      // console.log(res.data.donated_campaigns)  
+    axios.get('https://venturecrowd-server.vercel.app/profile',{withCredentials: true})   //returns rootUser
+    .then((res) => {
+    // console.log(res.data.donated_campaigns)  
       axios.post(`https://venturecrowd-server.vercel.app/getManyDonatedCampaigns`, res.data.donated_campaigns ) //returns list of campaigns from id's in yourCampaigns
         .then((res) => {
           // console.log(res.data)
@@ -27,13 +25,15 @@ function UserDonation() {
         })
         .catch((err)=>console.log(err))
       })
-      .catch((e)=>{console.log(e)})
-      setIsLoading(false);
-    }, 800);
+    .catch((e)=>{console.log(e)})
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    fetchCampaigns();
+    setIsLoading(true);
+    setTimeout(() => {
+      fetchCampaigns();
+    },700)
   }, []);
 
     return (

@@ -11,23 +11,23 @@ const Search = () => {
   const { title } = useParams();
 
   const fetchCampaigns = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      axios.get(`https://venturecrowd-server.vercel.app/searchCampaigns?searchValue=${title}`)
-        .then((res) => {
-          setCampaigns(res.data)
+    axios.get(`https://venturecrowd-server.vercel.app/searchCampaigns?searchValue=${title}`)
+      .then((res) => {
+        setCampaigns(res.data)
+        setIsLoading(false);
+      })
+      .catch((err)=>{
+          console.log(err)
           setIsLoading(false);
-        })
-        .catch((err)=>{
-            console.log(err)
-            setIsLoading(false);
-        })
+    })
       
-    }, 700);
   }
 
   useEffect(() => {
-    fetchCampaigns();
+    setIsLoading(true);
+    setTimeout(() => {
+      fetchCampaigns();
+    },700)
   }, [title]);
 
   return (

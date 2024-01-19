@@ -9,27 +9,27 @@ const Profile = () => {
   const [campaigns, setCampaigns] = useState([]);
 
   const fetchCampaigns = () => {
-    setIsLoading(true);
 
-    setTimeout(() => {
-      axios.get('https://venturecrowd-server.vercel.app/profile',{withCredentials: true})   //returns rootUser
+    axios.get('https://venturecrowd-server.vercel.app/profile',{withCredentials: true})   //returns rootUser
+    .then((res) => {
+    // console.log(res.data.yourCampaigns)
+
+    axios.post(`https://venturecrowd-server.vercel.app/getManyCampaigns`, res.data.yourCampaigns ) //returns list of campaigns from id's in yourCampaigns
       .then((res) => {
-      // console.log(res.data.yourCampaigns)
-
-      axios.post(`https://venturecrowd-server.vercel.app/getManyCampaigns`, res.data.yourCampaigns ) //returns list of campaigns from id's in yourCampaigns
-        .then((res) => {
-          console.log(res.data)
-          setCampaigns(res.data)
-        })
-        .catch((err)=>console.log(err))
+        console.log(res.data)
+        setCampaigns(res.data)
       })
-      .catch((e)=>{console.log(e)})
-      setIsLoading(false);
-    }, 700);
+      .catch((err)=>console.log(err))
+    })
+    .catch((e)=>{console.log(e)})
+    setIsLoading(false);
   }
 
   useEffect(() => {
-    fetchCampaigns();
+    setIsLoading(true);
+    setTimeout(() => {
+      fetchCampaigns();
+    },700)
   }, []);
 
   return (
