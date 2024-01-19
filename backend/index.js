@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const dotenv = require('dotenv')
+import "dotenv/config"
 const cors = require('cors')
 const cookie_parser = require('cookie-parser')
 
@@ -9,7 +9,6 @@ const corsOptions ={
     credentials:true,              //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
-dotenv.config({ path: './config.env'})
 const PORT = process.env.PORT
 
 require('./db/connnection')
