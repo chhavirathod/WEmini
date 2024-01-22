@@ -10,7 +10,7 @@ const corsOptions ={
     credentials:true,              //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
-dotenv.config({ path: './config.env'})
+dotenv.config({ path: './.env'})
 const PORT = process.env.PORT
 
 require('./db/connnection')
