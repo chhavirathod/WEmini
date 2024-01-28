@@ -18,11 +18,11 @@ const Profile = () => {
       .then((res) => {
         console.log(res.data)
         setCampaigns(res.data)
+        setIsLoading(false);
       })
       .catch((err)=>console.log(err))
     })
     .catch((e)=>{console.log(e)})
-    setIsLoading(false);
   }
 
   useEffect(() => {

@@ -7,27 +7,33 @@ import {NameIcon} from '../assets';
 import {ToastContainer, toast} from 'react-toastify';
 import Login from "./Modal";
 
-export default function App({handleChange , onClose, setFormType}) {
+export default function App({handleChange , onClose, setFormType, error}) {
 
   return (
     <>
       <Input
+        isClearable
         autoFocus
         endContent={<NameIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0"/>}
         label="Name"
         placeholder="Enter your name"
         variant="bordered"
+        color="success"
         onChange={(e) => {handleChange('name',e)}}
       />
 
       <Input
+        isClearable
         autoFocus
         endContent={
           <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
         }
         label="Email"
         placeholder="Enter your email"
+        isInvalid={error ? true : false}
+        color={error ? 'danger' : 'success'}
         variant="bordered"
+
         onChange={(e) => {handleChange('email',e)}}
       />
       <Input
@@ -38,6 +44,8 @@ export default function App({handleChange , onClose, setFormType}) {
         placeholder="Enter your password"
         type="password"
         variant="bordered"
+        isInvalid={error ? true : false}
+        color={error ? 'danger' : 'success'}
         onChange={(e) => {handleChange('pwd',e)}}
       />
 
@@ -49,6 +57,8 @@ export default function App({handleChange , onClose, setFormType}) {
         placeholder="Enter your password"
         type="password"
         variant="bordered"
+        isInvalid={error ? true : false}
+        color={error ? 'danger' : 'success'}
         onChange={(e) => {handleChange('cpwd',e)}}
       />
 

@@ -20,13 +20,12 @@ function UserDonation() {
           // console.log(res.data)
           setCampaigns(res.data.campaigns)
           setDonations(res.data.donations)
-          // console.log(res.data.campaigns)
-          // console.log(res.data.donations)
+          setIsLoading(false)
         })
         .catch((err)=>console.log(err))
+        
       })
     .catch((e)=>{console.log(e)})
-    setIsLoading(false);
   }
 
   useEffect(() => {

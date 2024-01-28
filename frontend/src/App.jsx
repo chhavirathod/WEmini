@@ -35,7 +35,7 @@ const App = () => {
           
         </div>
         <ToastContainer
-            position="bottom-center"
+            position="bottom-right"
             autoClose={1000}
             hideProgressBar={false}
             newestOnTop={false}

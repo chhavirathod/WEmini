@@ -3,7 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import {MailIcon} from '../assets';
 import {LockIcon} from '../assets';
 import axios from "axios";
-import {ToastContainer, toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 import Register from './Register'
 import Login from './Login'
 import { UserContext } from "../App";
@@ -14,6 +14,8 @@ export default function App(props) {
   const {state , dispatch} = useContext(UserContext);
 
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [success , setSuccess] = useState(false)
+  const [error , setError] = useState(false)
   const [formType , setFormType] = useState("")
   const [ loginForm , setLoginForm ] = useState({
     email: "",
@@ -28,6 +30,7 @@ export default function App(props) {
 
   useEffect(() =>{
     setFormType(props.formType);
+    setSuccess(false)
   },[])
 
 
@@ -51,9 +54,12 @@ export default function App(props) {
     //validation
     if(!validateEmail(registerForm.email)){
       toast.error("Invalid Email");
+      setSuccess(false)
+      setError(true)
     }
     if(!registerForm.email || !registerForm.pwd || !registerForm.name || !registerForm.cpwd){
       toast.error("Please enter all the fields");
+      setSuccess(false)
     }
 
     //post request
@@ -61,12 +67,16 @@ export default function App(props) {
       .then((res) => {
         if(res.status === 201){
           toast.success(res.data.message)
+          setSuccess(true)
+          setError(false)
         }
       })
       .catch((err) => {
         console.log(err);
         if( err.response.status === 401 ){
           toast.error(err.response.data.message);
+          setSuccess(false)
+          setError(true)
         }
       })
       props.handleClick();
@@ -78,9 +88,12 @@ export default function App(props) {
     //validation
     if(!validateEmail(loginForm.email)){
       toast.warning("Invalid Email");
+      setSuccess(false)
+      setError(true)
     }
     if(!loginForm.email || !loginForm.pwd){
       toast.warning("Please Enter all the fields");
+      setSuccess(false)
     }
 
     //post request
@@ -89,12 +102,16 @@ export default function App(props) {
         if(res.status === 200){
           dispatch({type: "USER" , payload: true})
           toast.success(res.data.message)
+          setSuccess(true)
+          setError(false)
         }
       })
       .catch((err) => {
         console.log(err);
         if( err.response.status === 401 || err.response.status === 500 ){
           toast.error(err.response.data.message);
+          setSuccess(false)
+          setError(true)
         }
       })
       props.handleClick()
@@ -122,8 +139,8 @@ export default function App(props) {
             <ModalHeader className="flex flex-col gap-1 text-4xl text-semibold">{formType}</ModalHeader>
               <ModalBody>
                 {formType === "Login" ? 
-                  <Login handleChange={handleLoginChange} onClose={onClose} setFormType={setFormType} /> : 
-                  <Register handleChange={handleRegisterChange} onClose={onClose} setFormType={setFormType} />
+                  <Login handleChange={handleLoginChange} onClose={onClose} setFormType={setFormType} error={error}/> : 
+                  <Register handleChange={handleRegisterChange} onClose={onClose} setFormType={setFormType} error={error} />
                 }
               </ModalBody>
               <ModalFooter>
@@ -137,7 +154,7 @@ export default function App(props) {
                     else if(formType === "Register")
                       registerSubmitHandler()
                   }} 
-                  onPress={onClose} 
+                  onPress={success ? onClose : null} 
                   className="bg-[#1dc071]"
                   >
                   Submit

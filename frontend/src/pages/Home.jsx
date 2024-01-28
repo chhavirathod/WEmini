@@ -20,6 +20,8 @@ const Home = () => {
         console.log(e);
         setIsLoading(false);
       })
+
+      // axios.
     }, 700);
 
   },[]);

@@ -12,11 +12,6 @@ const authenticate = require('../middleware/authenticate');
 
 router.get('/' , (req,res) => {
     res.send("Backend Home Page");
-    // res.setHeader("Access-Control-Allow-Origin", "*")
-    // res.setHeader("Access-Control-Allow-Credentials", "true");
-    // res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-    // res.setHeader("Access-Control-Allow-Headers", "content-type");
-    // res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
 })
 
 router.get('/viewAllUsers', (req,res) =>{
@@ -29,6 +24,13 @@ router.get('/viewAllUsers', (req,res) =>{
 
 router.get('/currentUser' ,authenticate, (req,res) => {
     res.status(200).send(req.rootUser)
+})
+
+router.get('/checkLoggedUser' , authenticate, (req,res) => {
+    if (req.rootUser)
+        return res.status(200).json({message: 'User is logged in'})
+    else
+        return res.status(401).json({message: 'No User Logged in'})
 })
 
 router.get('/profile' , authenticate , (req,res) => {
@@ -123,23 +125,27 @@ router.post('/getManyDonatedCampaigns' , (req,res) => {
     let c_list =[]
     let d_list =[]
     var c = []
+    var d = []
     // console.log(list[0].campaign.campaign_id)
     list.map((item) =>{
         c_list.push(item.campaign.campaign_id)
         d_list.push(item.campaign.donation)
     })
     // console.log(c_list)
-    c_list.map((item) => {
-        Campaign.findOne({ _id: item })
+    list.map((item) => {
+        Campaign.findOne({ _id: item.campaign.campaign_id })
         .then((campaign)=>{
             if(campaign){
                 c.push(campaign);
-                if(c.length == d_list.length){
-                    return res.status(200).json({campaigns: c, donations: d_list})
-                }
+                d.push(item.campaign.donation)   
+            }
+            if(c.length === d_list.length && d.length === d_list.length){
+                return res.status(200).json({campaigns: c, donations: d})
             }
         })
         .catch((e)=>console.log(e))
+        
+
     })
 })
 

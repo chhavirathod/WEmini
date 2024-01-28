@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 
 // import { useStateContext } from '../context';
@@ -12,6 +12,7 @@ import Logout from './Logout';
 import { Avatar, AvatarIcon } from '@nextui-org/react';
 import Modal from './Modal';
 import {toast} from 'react-toastify'
+import axios from 'axios';
 
 const Navbar = () => {
   const {state , dispatch} = useContext(UserContext)
@@ -25,6 +26,17 @@ const Navbar = () => {
   const changeHandler = (e) => {
     setSearchValue(e.target.value);
   }
+
+  useEffect( () => {
+    axios.get('https://venturecrowd-server.vercel.app/checkLoggedUser', {withCredentials : true})
+    .then((res) => {
+      if(res.status === 200)
+        dispatch({type: "USER" , payload: true})
+    })
+    .catch((e) => {
+      console.log(e)
+    })
+  },[])
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6 ">
