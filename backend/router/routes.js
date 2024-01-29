@@ -54,7 +54,7 @@ router.get('/getCampaign/:id' , (req,res) => {
 })
 
 router.get('/logout' , (req,res) => {
-    res.clearCookie("jwtoken", {path: "/", httpOnly: true, secure: true, sameSite:"none" });
+    res.clearCookie("jwtoken", {path: "/",domain:"venturecrowd.vercel.app", httpOnly: true, secure: true, sameSite:"none" });
     res.status(200).json({message:"Logged out Successfully!"})
     console.log(res.cookie)
 })
@@ -216,6 +216,7 @@ router.post('/login' , (req , res) => {
                 
                 //cookie
                 res.cookie("jwtoken" , token , { 
+                    domain:"venturecrowd.vercel.app",
                     expires: new Date(Date.now() + 3600000),
                     httpOnly: true,
                     secure: true,
