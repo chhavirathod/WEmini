@@ -20,7 +20,6 @@ function Login({handleChange , onClose, setFormType, error}) {
         onChange={(e) => {handleChange('email',e)}}
     />
     <Input
-        autoFocus
         endContent={
         <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
         }
