@@ -24,7 +24,6 @@ export default function App({handleChange , onClose, setFormType, error}) {
 
       <Input
         isClearable
-        autoFocus
         endContent={
           <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
         }
