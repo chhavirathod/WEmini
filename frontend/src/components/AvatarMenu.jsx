@@ -4,13 +4,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Logout from "./Logout";
 import { UserContext } from "../App";
+import { SERVER_URL } from '../constants';
 // For name and Email
 export default function AvatarMenu() {
     const {state , dispatch} = useContext(UserContext)
     const navigate = useNavigate()
     const [user , setUser] = useState({})
    useEffect(() => {
-        axios.get('https://venturecrowd-server.vercel.app/currentUser' , {withCredentials: true})
+        axios.get(SERVER_URL + '/currentUser' , {withCredentials: true})
             .then((res) => {
                 if(res.data){
                   setUser(res.data);

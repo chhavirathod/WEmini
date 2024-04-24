@@ -2,9 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { toast } from 'react-toastify';
-// import { ethers } from 'ethers';
-
-// import { useStateContext } from '../context';
+import { SERVER_URL } from '../constants';
 import { money } from '../assets';
 import { CustomButton, FormField, Loader } from '../components';
 import { checkIfImage } from '../utils';
@@ -34,7 +32,7 @@ const CreateCampaign = () => {
       if(exists) {
         setIsLoading(true)
         
-        axios.post('https://venturecrowd-server.vercel.app/addCampaign' , form , {withCredentials: true})
+        axios.post(SERVER_URL + '/addCampaign' , form , {withCredentials: true})
           .then((res)=>{
             toast.success(res.data.message)
           })

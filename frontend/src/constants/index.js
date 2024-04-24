@@ -1,5 +1,7 @@
 import { createCampaign, dashboard, logout, payment, profile, withdraw } from '../assets';
 
+export const SERVER_URL = 'https://venturecrowd-server.vercel.app'
+
 export const navlinks = [
   {
     name: 'Dashboard',

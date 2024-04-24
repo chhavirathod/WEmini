@@ -13,6 +13,7 @@ import { Avatar, AvatarIcon } from '@nextui-org/react';
 import Modal from './Modal';
 import {toast} from 'react-toastify'
 import axios from 'axios';
+import { SERVER_URL } from '../constants';
 
 const Navbar = () => {
   const {state , dispatch} = useContext(UserContext)
@@ -28,7 +29,7 @@ const Navbar = () => {
   }
 
   useEffect( () => {
-    axios.get('https://venturecrowd-server.vercel.app/checkLoggedUser', {withCredentials : true})
+    axios.get(SERVER_URL + '/checkLoggedUser', {withCredentials : true})
     .then((res) => {
       if(res.status === 200)
         dispatch({type: "USER" , payload: true})

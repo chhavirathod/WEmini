@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { CustomButton, FormField, Loader } from '../components';
 import { checkIfImage } from '../utils';
 import { Button } from '@nextui-org/react';
+import { SERVER_URL } from '../constants';
 
 const UpdateCampaign = () => {
   const { state } = useLocation();
@@ -31,7 +32,7 @@ const UpdateCampaign = () => {
       if(exists) {
         setIsLoading(true)
         
-        axios.post('https://venturecrowd-server.vercel.app/update' , form)
+        axios.post(SERVER_URL + '/update' , form)
         .then((res)=>{
             toast.success(res.data.message)
             console.log("updated")

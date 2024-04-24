@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import { SERVER_URL } from '../constants';
 import { CountBox, CustomButton, Loader } from '../components';
 import { calculateBarPercentage, daysLeft } from '../utils';
 import { thirdweb } from '../assets';
@@ -22,7 +22,7 @@ const CampaignDetails = () => {
   useEffect(() => {
     // sets donators
     setTimeout(()=>{
-      axios.get(`https://venturecrowd-server.vercel.app/getCampaign/${state._id}`)
+      axios.get(`${SERVER_URL}/getCampaign/${state._id}`)
       .then((res)=>{
         setDonators(res.data.donators)
       })
@@ -33,7 +33,7 @@ const CampaignDetails = () => {
 
   const handleDonate = () => {
     setIsLoading(true);
-    axios.post('https://venturecrowd-server.vercel.app/donate' , {campaign: state, donation: amount} , {withCredentials: true})
+    axios.post(SERVER_URL + '/donate' , {campaign: state, donation: amount} , {withCredentials: true})
       .then((res)=>{
         console.log('Donated: '+ amount + ` to ${state.title}` )
         toast.success(res.data.message)
@@ -44,7 +44,7 @@ const CampaignDetails = () => {
   }
 
   const handleDelete = () =>{
-    axios.post('https://venturecrowd-server.vercel.app/deleteCampaign', {_id: state._id} , {withCredentials: true})
+    axios.post(SERVER_URL + '/deleteCampaign', {_id: state._id} , {withCredentials: true})
           .then((res) => {
             if(res.status === 200){
               toast.success("Campaign deleted Succesfully")
@@ -62,7 +62,7 @@ const CampaignDetails = () => {
   }
 
   const checkUser = () => {
-    axios.post('https://venturecrowd-server.vercel.app/checkCampaign', {title: state.title} , {withCredentials: true})
+    axios.post(SERVER_URL + '/checkCampaign', {title: state.title} , {withCredentials: true})
           .then((res) => {
             if(res.data.maker.name === res.data.requester.name) 
               setCheckCampaign(true)

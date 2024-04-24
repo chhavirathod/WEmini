@@ -2,6 +2,7 @@ import { React , useState, useEffect} from 'react';
 import { loader } from '../assets';
 import axios from 'axios'
 import { tagType, thirdweb } from '../assets';
+import { SERVER_URL } from '../constants';
 
 function UserDonation() {
   
@@ -12,10 +13,10 @@ function UserDonation() {
 
   const fetchCampaigns = () => {
 
-    axios.get('https://venturecrowd-server.vercel.app/profile',{withCredentials: true})   //returns rootUser
+    axios.get(SERVER_URL + '/profile',{withCredentials: true})   //returns rootUser
     .then((res) => {
     // console.log(res.data.donated_campaigns)  
-      axios.post(`https://venturecrowd-server.vercel.app/getManyDonatedCampaigns`, res.data.donated_campaigns ) //returns list of campaigns from id's in yourCampaigns
+      axios.post(SERVER_URL +'/getManyDonatedCampaigns', res.data.donated_campaigns ) //returns list of campaigns from id's in yourCampaigns
         .then((res) => {
           // console.log(res.data)
           setCampaigns(res.data.campaigns)

@@ -3,9 +3,10 @@ import { toast } from "react-toastify"
 import { useContext } from "react"
 import { UserContext } from "../App"
 import { useNavigate } from "react-router-dom"
+import { SERVER_URL } from '../constants';
 
 const Logout = () => {
-    axios.get('https://venturecrowd-server.vercel.app/logout', {withCredentials: true})
+    axios.get(SERVER_URL + '/logout', {withCredentials: true})
         .then((res) => {
             if(res.status == 200)
             {

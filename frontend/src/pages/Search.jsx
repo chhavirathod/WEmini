@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import { SERVER_URL } from '../constants';
 import { DisplayCampaigns } from '../components';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -11,7 +11,7 @@ const Search = () => {
   const { title } = useParams();
 
   const fetchCampaigns = () => {
-    axios.get(`https://venturecrowd-server.vercel.app/searchCampaigns?searchValue=${title}`)
+    axios.get(`${SERVER_URL}/searchCampaigns?searchValue=${title}`)
       .then((res) => {
         setCampaigns(res.data)
         setIsLoading(false);

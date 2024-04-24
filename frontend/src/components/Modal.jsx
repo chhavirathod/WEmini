@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import Register from './Register'
 import Login from './Login'
 import { UserContext } from "../App";
+import { SERVER_URL } from '../constants';
 
 
 export default function App(props) {
@@ -63,7 +64,7 @@ export default function App(props) {
     }
 
     //post request
-    axios.post('https://venturecrowd-server.vercel.app/register' , registerForm)
+    axios.post(SERVER_URL + '/register' , registerForm)
       .then((res) => {
         if(res.status === 201){
           toast.success(res.data.message)
@@ -97,7 +98,7 @@ export default function App(props) {
     }
 
     //post request
-    axios.post('https://venturecrowd-server.vercel.app/login' , loginForm ,{withCredentials:true , credentials: "include"})
+    axios.post(SERVER_URL + '/login' , loginForm ,{withCredentials:true , credentials: "include"})
       .then((res) => {
         if(res.status === 200){
           dispatch({type: "USER" , payload: true})
