@@ -217,6 +217,8 @@ router.post('/login' , (req , res) => {
                 //cookie
                 res.cookie("jwtoken" , token , { 
                     expires: new Date(Date.now() + 3600000),
+                    path: "/",
+                    domain:"venturecrowd-server.vercel.app",
                     httpOnly: true,
                     secure: true,
                     sameSite: "none"
