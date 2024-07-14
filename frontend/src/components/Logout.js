@@ -3,7 +3,7 @@ import { toast } from "react-toastify"
 import { SERVER_URL } from '../constants';
 
 const Logout = () => {
-    axios.get(SERVER_URL + '/logout', {withCredentials: true})
+    axios.post(SERVER_URL + '/logout', {}, {withCredentials: true})
         .then((res) => {
             if(res.status == 200)
             {

@@ -53,10 +53,10 @@ router.get('/getCampaign/:id' , (req,res) => {
         .catch((e)=>{console.log(e)})
 })
 
-router.get('/logout' , (req,res) => {
+router.post('/logout' , (req,res) => {
     res.clearCookie("jwtoken", {path: "/",domain:"venturecrowd-server.vercel.app", httpOnly: true, secure: true, sameSite:"none" });
     res.status(200).json({message:"Logged out Successfully!"})
-    console.log(res.cookie)
+    return res.status(200).send('Logged out');
 })
 
 router.post('/deleteCampaign' , authenticate , (req,res) => {
