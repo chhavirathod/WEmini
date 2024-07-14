@@ -9,6 +9,7 @@ const Logout = () => {
             {
                toast.success(res.data.message)
                localStorage.removeItem('jwtoken') 
+               window.location.reload()
             }
         })
         .catch((e)=>{
