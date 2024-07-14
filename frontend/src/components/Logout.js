@@ -1,8 +1,5 @@
 import axios from "axios"
 import { toast } from "react-toastify"
-import { useContext } from "react"
-import { UserContext } from "../App"
-import { useNavigate } from "react-router-dom"
 import { SERVER_URL } from '../constants';
 
 const Logout = () => {
@@ -10,7 +7,8 @@ const Logout = () => {
         .then((res) => {
             if(res.status == 200)
             {
-               toast.success(res.data.message) 
+               toast.success(res.data.message)
+               localStorage.removeItem('jwtoken') 
             }
         })
         .catch((e)=>{

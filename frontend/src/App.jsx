@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import { createContext, useReducer } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Sidebar, Navbar } from './components';
 import { Home, Profile, CreateCampaign, CampaignDetails, UserDonation, Search, Update } from './pages'

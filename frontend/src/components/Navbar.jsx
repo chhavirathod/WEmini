@@ -1,12 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useState, useEffect } from 'react'
+import {  useNavigate } from 'react-router-dom';
 
 // import { useStateContext } from '../context';
 import { AvatarMenu, CustomButton } from './';
-import { logo, menu, search, thirdweb } from '../assets';
+import { logo, menu, search } from '../assets';
 import { navlinks } from '../constants';
-import Login from './Modal';
-import Register from './Register';
 import { UserContext } from '../App';
 import Logout from './Logout';
 import { Avatar, AvatarIcon } from '@nextui-org/react';
