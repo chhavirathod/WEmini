@@ -55,7 +55,6 @@ router.get('/getCampaign/:id' , (req,res) => {
 
 router.get('/logout' , (req,res) => {
     res.clearCookie("jwtoken", {path: "/",domain:"venturecrowd-server.vercel.app", httpOnly: true, secure: true, sameSite:"none" });
-    console.log('Cookies after clearing:', res.get('Set-Cookie'));
     res.status(200).json({message:"Logged out Successfully!"})
     console.log(res.cookie)
 })
