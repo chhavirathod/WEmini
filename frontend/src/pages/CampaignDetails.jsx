@@ -7,9 +7,11 @@ import { thirdweb } from '../assets';
 import  axios  from 'axios';
 import { toast } from 'react-toastify';
 import { Button } from '@nextui-org/react';
+import { UserContext } from '../App';
 
 const CampaignDetails = () => {
   const { state } = useLocation();
+  const { _ , dispatch} = useContext(UserContext)
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +37,8 @@ const CampaignDetails = () => {
     setIsLoading(true);
     axios.post(SERVER_URL + '/donate' , {campaign: state, donation: amount} , {withCredentials: true})
       .then((res)=>{
-        console.log('Donated: '+ amount + ` to ${state.title}` )
+        console.log('Donated: '+ amount + ` to ${state.title}`)
+        dispatch({type: "USER" , payload: {loggedIn: true, loggedUser: res.data.updatedUser}});
         toast.success(res.data.message)
       })
       .catch((e)=>{toast.error("Error : " + e)})
@@ -45,16 +48,16 @@ const CampaignDetails = () => {
 
   const handleDelete = () =>{
     axios.post(SERVER_URL + '/deleteCampaign', {_id: state._id} , {withCredentials: true})
-          .then((res) => {
-            if(res.status === 200){
-              toast.success("Campaign deleted Succesfully")
-              navigate('/')
-            } 
-            else{
-              toast.error("Campaign couldn't be deleted")
-            }
-        })
-        .catch((e)=>console.log(e))
+      .then((res) => {
+        if(res.status === 200){
+          toast.success("Campaign deleted Succesfully")
+          navigate('/')
+        } 
+        else{
+          toast.error("Campaign couldn't be deleted")
+        }
+    })
+    .catch((e)=>console.log(e))
   }
 
   const handleUpdate = () => {

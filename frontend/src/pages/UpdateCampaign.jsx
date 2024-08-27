@@ -27,7 +27,6 @@ const UpdateCampaign = () => {
   }
 
   const handleSubmit =  () => {
-
     checkIfImage(form.image, async (exists) => {
       if(exists) {
         setIsLoading(true)
@@ -60,7 +59,7 @@ const UpdateCampaign = () => {
       <form onSubmit={handleSubmit} className="w-full mt-[65px] flex flex-col gap-[30px]">
         <div className="flex flex-wrap gap-[40px]">
           <FormField 
-            labelName="Your Name *"
+            labelName="Campaign Creator's Name *"
             placeholder="John Doe"
             inputType="text"
             value={form.name}

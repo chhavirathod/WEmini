@@ -5,19 +5,17 @@ import { loader } from '../assets';
 import { toast } from 'react-toastify';
 import { UserContext } from '../App';
 
-const DisplayCampaigns = ({ title, notFound, isLoading, campaigns }) => {
+const DisplayCampaigns = ({ title, notFound, isLoading, setHasDeleted, campaigns={} }) => {
   const navigate = useNavigate();
-  const {state,dispatch} = useContext(UserContext)
-
+  const {state,dispatch} = useContext(UserContext);
   const handleNavigate = (campaign) => {
     navigate(`/campaign-details/${campaign.title}`, { state: campaign })
   }
+
   // For the URL
-  
   return (
     <div>
       <h1 className="font-epilogue font-semibold font-['Ubuntu'] text-xl md:text-3xl text-white text-center md:text-left">{title} ({campaigns.length})</h1>
-
       <div className="flex flex-wrap justify-center md:justify-start mt-[20px] gap-[26px]">
         {isLoading && (
           <img src={loader} alt="loader" className="w-[100px] h-[100px] object-contain" />
@@ -28,19 +26,22 @@ const DisplayCampaigns = ({ title, notFound, isLoading, campaigns }) => {
             {notFound ? notFound : "You have not created any campaigns yet..."}
           </p>
         )}
-
-        {!isLoading && campaigns.length > 0 && campaigns.map((campaign) => <FundCard 
-          key={campaign._id}
-          {...campaign}
-          handleClick={() => {
-            if(state){
-              handleNavigate(campaign)
-            }
-            else{
-              toast.info("Please login first!")
-            }
-          }}
-        />)}
+          {!isLoading && campaigns.length > 0 && campaigns.map((campaign) => 
+            <FundCard 
+              key={campaign._id}
+              campaign={campaign}
+              setHasDeleted={setHasDeleted}
+              editable={state.loggedIn && state.loggedUser && state.loggedUser.yourCampaigns.find(item => item.campaign.campaign_id === campaign._id)}
+              handleClick={() => {
+                if(state.loggedIn){
+                  handleNavigate(campaign)
+                }
+                else{
+                  toast.info("Please login first!")
+                }
+              }}
+            />)
+          }
       </div>
     </div>
   )

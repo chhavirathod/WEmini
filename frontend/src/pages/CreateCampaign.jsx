@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import { toast } from 'react-toastify';
@@ -6,9 +6,11 @@ import { SERVER_URL } from '../constants';
 import { money } from '../assets';
 import { CustomButton, FormField, Loader } from '../components';
 import { checkIfImage } from '../utils';
+import { UserContext } from '../App';
 
 const CreateCampaign = () => {
   const navigate = useNavigate();
+  const {state , dispatch} = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false);
   // const { createCampaign } = useStateContext();
   const [form, setForm] = useState({
@@ -34,6 +36,8 @@ const CreateCampaign = () => {
         
         axios.post(SERVER_URL + '/addCampaign' , form , {withCredentials: true})
           .then((res)=>{
+            console.log(res.data.updatedUser)
+            dispatch({type: "USER" , payload: {loggedIn: true, loggedUser: res.data.updatedUser}});
             toast.success(res.data.message)
           })
           .catch((e)=>toast.error(e.response.data.message))
@@ -57,7 +61,7 @@ const CreateCampaign = () => {
       <form onSubmit={handleSubmit} className="w-full mt-[65px] flex flex-col gap-[30px]">
         <div className="flex flex-wrap gap-[40px]">
           <FormField 
-            labelName="Your Name *"
+            labelName="Campaign Creator's Name *"
             placeholder="John Doe"
             inputType="text"
             value={form.name}

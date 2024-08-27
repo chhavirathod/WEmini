@@ -37,9 +37,9 @@ const Sidebar = () => {
                 isActive={isActive}
                 handleClick={() => {
                   if(!link.disabled && link.name === 'Logout'){
-                    if(state){
+                    if(state.loggedIn){
                       Logout();
-                      dispatch({type: "USER" , payload : false});
+                      dispatch({type: "USER" , payload: {loggedIn: false, loggedUser: null}});
                       navigate('/');
                     }
                     else{
@@ -47,7 +47,7 @@ const Sidebar = () => {
                     }
                   }
                   else if(!link.disabled) {
-                    if(state || link.name === "Dashboard"){
+                    if(state.loggedIn || link.name === "Dashboard"){
                       setIsActive(link.name);
                       navigate(link.link);
                     }

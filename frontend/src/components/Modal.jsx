@@ -98,10 +98,11 @@ export default function App(props) {
     }
 
     //post request
-    axios.post(SERVER_URL + '/login' , loginForm ,{withCredentials:true , credentials: "include"})
+    axios.post(SERVER_URL + '/login' , loginForm , {withCredentials:true , credentials: "include"})
       .then((res) => {
         if(res.status === 200){
-          dispatch({type: "USER" , payload: true})
+          dispatch({type: "USER" , payload: {loggedIn: true, loggedUser: res.data.loggedUser}})
+          console.log("state:",state.loggedUser)
           toast.success(res.data.message)
           setSuccess(true)
           setError(false)

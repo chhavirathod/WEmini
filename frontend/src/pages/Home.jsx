@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios';
 import { DisplayCampaigns } from '../components';
 import { SERVER_URL } from '../constants';
+import { UserContext } from '../App';
 
 const Home = () => {
+  const {state,dispatch} = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
+  const [hasDeleted, setHasDeleted] = useState(false)
 
   useEffect(() => {
     setIsLoading(true);
@@ -25,13 +28,14 @@ const Home = () => {
       // axios.
     }, 700);
 
-  },[]);
+  },[hasDeleted]);
 
   return (
     <DisplayCampaigns 
       title="All Campaigns"
       isLoading={isLoading}
       campaigns={campaigns}
+      setHasDeleted={setHasDeleted}
     />
   )
 }

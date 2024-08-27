@@ -20,7 +20,7 @@ const Navbar = () => {
   const [toggleDrawer, setToggleDrawer] = useState(false);
   const [searchValue , setSearchValue] = useState("");
   let navlinksList;
-  !state ? navlinksList = navlinks.filter((links) => links.name != 'Logout') : navlinksList = navlinks ;
+  !state.loggedIn ? navlinksList = navlinks.filter((links) => links.name != 'Logout') : navlinksList = navlinks ;
 
   const changeHandler = (e) => {
     setSearchValue(e.target.value);
@@ -30,7 +30,7 @@ const Navbar = () => {
     axios.get(SERVER_URL + '/checkLoggedUser', {withCredentials : true})
     .then((res) => {
       if(res.status === 200)
-        dispatch({type: "USER" , payload: true})
+        dispatch({type: "USER" , payload: {loggedIn: true, loggedUser: res.data.user}});
     })
     .catch((e) => {
       console.log(e)
@@ -66,7 +66,7 @@ const Navbar = () => {
 
       <div className="sm:flex hidden flex-row justify-end gap-4">
         
-        { state ? 
+        { state.loggedIn ? 
         <>
           <CustomButton 
             btnType="button"
@@ -81,7 +81,7 @@ const Navbar = () => {
             styles='bg-[#1dc071]'
             handleClick={() => {
               Logout()
-              dispatch({type: "USER" , payload : false})
+              dispatch({type: "USER" , payload: {loggedIn: false, loggedUser: null}});
               navigate('/')
             }}
           />
@@ -118,7 +118,7 @@ const Navbar = () => {
           </div>
 
           <div>
-            {state ? 
+            {state.loggedIn ? 
               <Avatar 
                 isBordered 
                 icon={<AvatarIcon/>}
@@ -147,11 +147,11 @@ const Navbar = () => {
 
                     if(link.name === 'Logout'){
                       Logout();
-                      dispatch({type: "USER" , payload : false});
+                      dispatch({type: "USER" , payload: {loggedIn: false, loggedUser: null}});
                       navigate('/')
                     }
 
-                    else if(state){
+                    else if(state.loggedIn){
                       navigate(link.link);
                     }
 
@@ -176,7 +176,7 @@ const Navbar = () => {
             </ul>
 
             <div className="flex flex-wrap gap-x-48 gap-y-5 mx-4">
-              {state ? 
+              {state.loggedIn ? 
               <CustomButton 
                 btnType="button"
                 title='Create a campaign' 

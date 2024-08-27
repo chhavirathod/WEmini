@@ -28,7 +28,7 @@ router.get('/currentUser' ,authenticate, (req,res) => {
 
 router.get('/checkLoggedUser' , authenticate, (req,res) => {
     if (req.rootUser)
-        return res.status(200).json({message: 'User is logged in'})
+        return res.status(200).json({message: 'User is logged in', user: req.rootUser})
     else
         return res.status(401).json({message: 'No User Logged in'})
 })
@@ -59,19 +59,27 @@ router.post('/logout' , (req,res) => {
     return res.status(200).send('Logged out');
 })
 
-router.post('/deleteCampaign' , authenticate , (req,res) => {
-    Campaign.deleteOne({_id:req.body._id})
-        .then(()=>{
-            res.status(200).send("Deleted")
+router.post('/deleteCampaign', authenticate, (req, res) => {
+    // Delete the campaign from the Campaign collection
+    Campaign.deleteOne({ _id: req.body._id })
+        .then(() => {
+            // After the campaign is deleted, remove it from the user's yourCampaigns array
+            User.findOneAndUpdate(
+                {_id:req.UserID}, 
+                { $pull: { yourCampaigns: { 'campaign.campaign_id': req.body._id } } },
+                { new: true }
+            )
+            .then((updatedUser)=>{console.log("User Updated")})
+            .catch((e) => {console.log(e)})
         })
-        .catch((e) => res.status(400).send(e))
-    // User.updateOne({_id: req.UserID} , {yourCampaigns: { $pull: {campaign: { campaign_id: req.body._id }}}})
-    //     .then(() => {
-    //         console.log(`deleted ${req.body._id}`)
-    //         res.status(200).send("Deleted")
-    //     })
-    //     .catch((e) => res.status(400).send(e))
-})
+        .then(() => {
+            console.log(`Deleted campaign with ID ${req.body._id}`);
+            res.status(200).send("Deleted");
+        })
+        .catch((e) => {
+            res.status(400).send(e);
+        });
+});
 
 router.post('/checkCampaign' , authenticate , (req,res) => {
     console.log(req.body)
@@ -127,26 +135,32 @@ router.post('/getManyDonatedCampaigns' , (req,res) => {
     var c = []
     var d = []
     // console.log(list[0].campaign.campaign_id)
-    list.map((item) =>{
-        c_list.push(item.campaign.campaign_id)
-        d_list.push(item.campaign.donation)
-    })
+    
     // console.log(c_list)
-    list.map((item) => {
-        Campaign.findOne({ _id: item.campaign.campaign_id })
-        .then((campaign)=>{
-            if(campaign){
-                c.push(campaign);
-                d.push(item.campaign.donation)   
-            }
-            if(c.length === d_list.length && d.length === d_list.length){
-                return res.status(200).json({campaigns: c, donations: d})
-            }
+    if(list.length == 0){
+        return res.status(200).json({campaigns: [], donations: []})
+    }
+    else
+    {
+        list.map((item) =>{
+            c_list.push(item.campaign.campaign_id)
+            d_list.push(item.campaign.donation)
         })
-        .catch((e)=>console.log(e))
-        
 
-    })
+        list.map((item) => {
+            Campaign.findOne({ _id: item.campaign.campaign_id })
+            .then((campaign)=>{
+                if(campaign){
+                    c.push(campaign);
+                    d.push(item.campaign.donation)   
+                }
+                if(c.length === d_list.length && d.length === d_list.length){
+                    return res.status(200).json({campaigns: c, donations: d})
+                }
+            })
+            .catch((e)=>console.log(e))
+        })
+    }
 })
 
 router.post('/register' , (req , res) => {
@@ -208,7 +222,7 @@ router.post('/login' , (req , res) => {
                         if(!isMatch)
                             res.status(401).json({message: "Wrong Password"})
                         else
-                            res.status(200).json({message: "Login Successfull"})
+                            res.status(200).json({message: "Login Successfull", loggedUser: userExist})
                     }).catch(e => console.log(e))
 
                 const token = await userExist.generateAuthToken();
@@ -250,7 +264,9 @@ router.post('/addCampaign' , authenticate , (req,res) => {
                 const campaign = new Campaign({name, title, description, towards, target, deadline, image})
                 campaign.save()
                 .then(() => {
-                    res.status(201).json({message: "Campaign added Succesfully"})
+                    // res.status(201).json({message: "Campaign added Succesfully"})
+                    console.log("Campaign added Succesfully")
+
                 })
                 .catch((e) => res.status(500).json({message: "Failed to add campaign"}))
             }
@@ -264,12 +280,19 @@ router.post('/addCampaign' , authenticate , (req,res) => {
             .then((campaign) => {
                 console.log(campaign)
                 if(campaign){
-                    User.updateOne({_id:req.UserID}, {$push: {yourCampaigns: {campaign:{campaign_id: campaign._id , title: campaign.title }}}})
-                        .then(() => console.log("Added Campaign to the User database"))
+                    User.findOneAndUpdate(
+                            {_id:req.UserID}, 
+                            {$push: {yourCampaigns: {campaign:{campaign_id: campaign._id , title: campaign.title }}}} , 
+                            { new: true }
+                        )
+                        .then((updatedUser) => {
+                            res.status(201).json({message: "Campaign added Succesfully", updatedUser: updatedUser})
+                            console.log("Added Campaign to the User database")
+                        }) 
                         .catch((e)=>console.log(e))
                 }
                 else    
-                console.log("didnt update User")
+                    console.log("didnt update User")
             })
             .catch((e)=>console.log(e))
         },500)
@@ -292,7 +315,7 @@ router.post('/update' , (req,res) => {
         deadline : deadline,
         image : image
     })
-    .then(()=>{res.status(201).json({message: "Campaign updated Succesfully"})})
+    .then((updatedCampaign)=>{res.status(201).json({message: "Campaign updated Succesfully", })})
     .catch((e)=>{
         console.log(e);
         res.status(500).json({message: "Failed to update your campaign"});
@@ -319,7 +342,7 @@ router.post('/donate' , authenticate , (req,res) => {
                 
         }
         )
-        .then(()=>{res.status(201).json({message :`Successfully Donated $${donation} to ${campaign.title}`})})
+        .then((updatedUser)=>{res.status(201).json({message :`Successfully Donated $${donation} to ${campaign.title}`, updatedUser: updatedUser})})
         .catch((e)=>{console.log(e)})
 })
 

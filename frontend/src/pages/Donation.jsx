@@ -1,33 +1,26 @@
-import { React , useState, useEffect} from 'react';
+import { React , useState, useEffect, useContext} from 'react';
 import { loader } from '../assets';
 import axios from 'axios'
 import { tagType, thirdweb } from '../assets';
 import { SERVER_URL } from '../constants';
+import { UserContext } from '../App';
 
 function UserDonation() {
-  
+  const {state , dispatch} = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(true);
   const [campaigns, setCampaigns] = useState([]);
-  const [donations , setDonations] = useState([])
+  const [donations , setDonations] = useState([]);
   
 
   const fetchCampaigns = () => {
-
-    axios.get(SERVER_URL + '/profile',{withCredentials: true})   //returns rootUser
-    .then((res) => {
-    // console.log(res.data.donated_campaigns)  
-      axios.post(SERVER_URL +'/getManyDonatedCampaigns', res.data.donated_campaigns ) //returns list of campaigns from id's in yourCampaigns
-        .then((res) => {
-          // console.log(res.data)
-          setCampaigns(res.data.campaigns)
-          setDonations(res.data.donations)
-          setIsLoading(false)
-        })
-        .catch((err)=>console.log(err))
-        
+    axios.post(SERVER_URL +'/getManyDonatedCampaigns', state.loggedUser.donated_campaigns) //returns list of campaigns from id's in yourCampaigns
+      .then((res) => {
+        setCampaigns(res.data.campaigns)
+        setDonations(res.data.donations)
+        setIsLoading(false)
       })
-    .catch((e)=>{console.log(e)})
-  }
+      .catch((err)=>console.log(err))
+    }
 
   useEffect(() => {
     setIsLoading(true);
