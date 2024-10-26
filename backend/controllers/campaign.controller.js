@@ -1,65 +1,23 @@
-const express = require('express')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const mongoose = require('mongoose')
-const router = express.Router()
-
-
-require("../db/connnection");
 const User = require('../model/userSchema');
 const Campaign = require('../model/campaignSchema');
-const authenticate = require('../middleware/authenticate');
 
-router.get('/' , (req,res) => {
-    res.send("Backend Home Page");
-})
-
-router.get('/viewAllUsers', (req,res) =>{
-    User.find()
-        .then((users) =>{
-            res.send(users)
-        })
-        .catch((err) => console.log(err))
-})
-
-router.get('/currentUser' ,authenticate, (req,res) => {
-    res.status(200).send(req.rootUser)
-})
-
-router.get('/checkLoggedUser' , authenticate, (req,res) => {
-    if (req.rootUser)
-        return res.status(200).json({message: 'User is logged in', user: req.rootUser})
-    else
-        return res.status(401).json({message: 'No User Logged in'})
-})
-
-router.get('/profile' , authenticate , (req,res) => {
-    return res.send(req.rootUser);
-})
-
-router.get('/allCampaigns' , (req,res) => {
+const allCampaigns = (req,res) => {
     Campaign.find()
         .then((campaigns) => {
             res.send(campaigns)
         })
         .catch((e)=>{console.log(e)})
-})
+}
 
-router.get('/getCampaign/:id' , (req,res) => { 
+const getCampaignById = (req,res) => { 
     Campaign.findOne({_id:req.params.id})
         .then((campaign) => {
             return res.status(200).send(campaign)
         })
         .catch((e)=>{console.log(e)})
-})
+}
 
-router.post('/logout' , (req,res) => {
-    res.clearCookie("jwtoken", {path: "/",domain:"venturecrowd-server.vercel.app", httpOnly: true, secure: true, sameSite:"none" });
-    res.status(200).json({message:"Logged out Successfully!"})
-    return res.status(200).send('Logged out');
-})
-
-router.post('/deleteCampaign', authenticate, (req, res) => {
+const deleteCampaignById = (req, res) => {
     // Delete the campaign from the Campaign collection
     Campaign.deleteOne({ _id: req.body._id })
         .then(() => {
@@ -79,18 +37,18 @@ router.post('/deleteCampaign', authenticate, (req, res) => {
         .catch((e) => {
             res.status(400).send(e);
         });
-});
+}
 
-router.post('/checkCampaign' , authenticate , (req,res) => {
+const checkCampaign = (req,res) => {
     console.log(req.body)
     User.findOne({_id:req.UserID , "yourCampaigns.campaign.title": req.body.title})
         .then((user)=>{
             res.status(200).send({maker: user , requester: req.rootUser})
         })
         .catch((e) => console.log(e))
-})
+}
 
-router.get('/searchCampaigns' , (req,res) => {
+const searchCampaigns = (req,res) => {
     const { searchValue } = req.query
     console.log("Title to search: " , searchValue)
     Campaign.find({ $text : {
@@ -107,9 +65,9 @@ router.get('/searchCampaigns' , (req,res) => {
             }
         })
         .catch((e)=>console.log(e))
-})
+}
 
-router.post('/getManyCampaigns' , (req,res) => {
+const getManyCampaigns = (req,res) => {
     const list = req.body
     let c_list =[]
     list.map((item) =>{
@@ -126,9 +84,9 @@ router.post('/getManyCampaigns' , (req,res) => {
             }
         })
         .catch((e)=>console.log(e))
-})
+}
 
-router.post('/getManyDonatedCampaigns' , (req,res) => {
+const getManyDonatedCampaigns = (req,res) => {
     const list = req.body
     let c_list =[]
     let d_list =[]
@@ -161,92 +119,9 @@ router.post('/getManyDonatedCampaigns' , (req,res) => {
             .catch((e)=>console.log(e))
         })
     }
-})
+}
 
-router.post('/register' , (req , res) => {
-    const { name , email , pwd , cpwd } = req.body
-    
-    //validation
-    function validateEmail(email) {
-        const regex = /^[\w.-]+@[a-zA-Z_-]+?\.[a-zA-Z]{2,}$/;
-        return regex.test(email);
-    }
-
-    if(!validateEmail(email)){
-        return res.status(401).json({message: "Invalid Email"})
-    }
-
-    //Checking existing User
-    User.findOne({email: email})
-        .then( (userExist) => {
-            if(userExist){
-                return res.status(401).json({message: "Email already Exists"})
-            }
-
-            else if(pwd != cpwd){
-                return res.status(401).json({message: "Confirm Password not equal"})
-            }
-
-            const user = new User({name , email, pwd, cpwd})
-            
-            user.save().then(() => {
-                res.status(201).json({message: "User registered Succesfully"})
-            }).catch((e) => res.status(500).json({message: "Failed to register"}))
-            
-        })
-        .catch( e => { console.log(e) })
-})
-
-router.post('/login' , (req , res) => {
-    const { email , pwd } = req.body 
-    // console.log(req.body)
-
-    //validation
-    function validateEmail(email) {
-        const regex = /^[\w.-]+@[a-zA-Z_-]+?\.[a-zA-Z]{2,}$/;
-        return regex.test(email);
-    }
-    if(!email || !pwd){
-        return res.status(401).json({error : "Please fill all the fields!"})
-    }
-    if(!validateEmail(email)){
-        return res.status(401).json({error: "Invalid Email"})
-    }
-
-    //Checking existing User
-    User.findOne({email : email})
-        .then(async (userExist) => {      //userExist contains details of the found user or NULL value
-            if(userExist){
-                bcrypt.compare( pwd , userExist.pwd)
-                    .then((isMatch) =>{
-                        if(!isMatch)
-                            res.status(401).json({message: "Wrong Password"})
-                        else
-                            res.status(200).json({message: "Login Successfull", loggedUser: userExist})
-                    }).catch(e => console.log(e))
-
-                const token = await userExist.generateAuthToken();
-                console.log(token)
-                
-                //cookie
-                res.cookie("jwtoken" , token , { 
-                    expires: new Date(Date.now() + 3600000),
-                    path: "/",
-                    domain:"venturecrowd-server.vercel.app",
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: "none"
-                });
-            }
-            else
-                res.status(401).json({message: "Couldnt find the User"})
-        })
-        .catch((e) => {
-            console.log(e)
-        })
-})
-
-router.post('/addCampaign' , authenticate , (req,res) => {
+const addCampaign = (req,res) => {
     const { name, title, description, towards, target, deadline, image } = req.body
     
     if( !name || !title || !description|| !towards || !target || !deadline || !image){
@@ -297,9 +172,9 @@ router.post('/addCampaign' , authenticate , (req,res) => {
             .catch((e)=>console.log(e))
         },500)
 
-})
+}
 
-router.post('/update' , (req,res) => {
+const updateCampaignById = (req,res) => {
     const { id, name, title, description, towards, target, deadline, image } = req.body
     
     if( !name || !title || !description|| !towards || !target || !deadline || !image){
@@ -320,9 +195,9 @@ router.post('/update' , (req,res) => {
         console.log(e);
         res.status(500).json({message: "Failed to update your campaign"});
     })
-})
+}
 
-router.post('/donate' , authenticate , (req,res) => {
+const donateCampaignById = (req,res) => {
     const { campaign , donation } = req.body
     Campaign.updateOne(
         {_id: campaign._id} , 
@@ -344,6 +219,17 @@ router.post('/donate' , authenticate , (req,res) => {
         )
         .then((updatedUser)=>{res.status(201).json({message :`Successfully Donated $${donation} to ${campaign.title}`, updatedUser: updatedUser})})
         .catch((e)=>{console.log(e)})
-})
+}
 
-module.exports = router
+module.exports = { 
+    allCampaigns, 
+    getCampaignById, 
+    deleteCampaignById, 
+    checkCampaign, 
+    searchCampaigns, 
+    getManyCampaigns, 
+    getManyDonatedCampaigns, 
+    addCampaign, 
+    updateCampaignById, 
+    donateCampaignById 
+}

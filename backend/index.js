@@ -19,7 +19,8 @@ app.use(cors(corsOptions))
 app.use(cookie_parser())
 app.use(express.json())
 
-app.use(require('./router/routes'))
+app.use(require('./router/UserRoutes'))
+app.use(require('./router/CampaignRoutes'))
 
 app.get('/' , (req,res) => res.send("Hello"));
 

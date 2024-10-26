@@ -9,5 +9,5 @@ mongoose.connect(DB_URL)
         console.log('Database Connected')
     })
     .catch( (e) => {
-        console.log("Couldnt connect to the Database")
+        console.log(e);
     })
