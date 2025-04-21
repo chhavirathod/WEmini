@@ -9,7 +9,6 @@ import Login from './Login'
 import { UserContext } from "../App";
 import { SERVER_URL } from '../constants';
 
-
 export default function App(props) {
 
   const {state , dispatch} = useContext(UserContext);

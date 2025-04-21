@@ -31,7 +31,7 @@ const DisplayCampaigns = ({ title, notFound, isLoading, setHasDeleted, campaigns
               key={campaign._id}
               campaign={campaign}
               setHasDeleted={setHasDeleted}
-              editable={state.loggedIn && state.loggedUser && state.loggedUser.yourCampaigns.find(item => item.campaign.campaign_id === campaign._id)}
+              editable={state.loggedIn && state.loggedUser || state.loggedUser.yourCampaigns.find(item => item.campaign.campaign_id === campaign._id)}
               handleClick={() => {
                 if(state.loggedIn){
                   handleNavigate(campaign)

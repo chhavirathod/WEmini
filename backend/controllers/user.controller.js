@@ -41,7 +41,7 @@ const login = (req , res) => {
                 res.cookie("jwtoken" , token , { 
                     expires: new Date(Date.now() + 3600000),
                     path: "/",
-                    domain:"venturecrowd-server.vercel.app",
+                    domain:"localhost",
                     httpOnly: true,
                     secure: true,
                     sameSite: "none"
@@ -102,7 +102,7 @@ const viewAllUsers = (req,res) =>{
 }
 
 const logout = (req,res) => {
-    res.clearCookie("jwtoken", {path: "/",domain:"venturecrowd-server.vercel.app", httpOnly: true, secure: true, sameSite:"none" });
+    res.clearCookie("jwtoken", {path: "/",domain:"localhost", httpOnly: true, secure: true, sameSite:"none" });
     res.status(200).json({message:"Logged out Successfully!"})
     return res.status(200).send('Logged out');
 }
